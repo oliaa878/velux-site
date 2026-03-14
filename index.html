@@ -11,7 +11,7 @@
   ║                                                                  ║
   ║   Sviluppato da:  [Il tuo nome]                                  ║
   ║   Assistito da:   Claude (Anthropic AI)                          ║
-  ║   Versione:       7.0                                            ║
+  ║   Versione:       8.0                                            ║
   ║   Data:           2024                                           ║
   ║                                                                  ║
   ╠══════════════════════════════════════════════════════════════════╣
@@ -56,8 +56,22 @@
   <meta name="twitter:title"       content="Luca Martini – Installatore VELUX Certificato" />
   <meta name="twitter:description" content="Installazione professionale di finestre per tetti e lucernari VELUX in Lombardia." />
   <meta name="twitter:image"       content="https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=1200&fm=webp&q=65&fit=crop&auto=format" />
+  <!-- Preconnect to font origins so DNS+TCP is ready before CSS requests -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Lato:ital,wght@0,300;0,400;0,700;1,300&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+  <!-- Load fonts async — media="print" trick loads without blocking render,
+       onload switches to all so fonts apply once downloaded -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Lato:ital,wght@0,300;0,400;0,700;1,300&display=swap"
+    rel="stylesheet"
+    media="print"
+    onload="this.media='all'"
+  />
+  <!-- Fallback for no-JS — loads fonts normally -->
+  <noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Lato:ital,wght@0,300;0,400;0,700;1,300&display=swap" rel="stylesheet" />
+  </noscript>
 
   <style>
     /* ============================================================
@@ -95,6 +109,9 @@
       --pad-y:     6rem;
     }
 
+
+    /* Ensure text stays visible during font load */
+    @font-face { font-display: swap; }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
@@ -108,6 +125,21 @@
 
     img { display: block; max-width: 100%; height: auto; }
 
+
+    /* Skip to main content — keyboard accessibility */
+    .skip-link {
+      position: absolute;
+      top: -100%;
+      left: 1rem;
+      padding: 0.5rem 1rem;
+      background: var(--red);
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.85rem;
+      z-index: 9999;
+      transition: top 0.2s;
+    }
+    .skip-link:focus { top: 0.5rem; }
     /* Screen-reader only — visually hidden but accessible */
     .sr-only {
       position: absolute; width: 1px; height: 1px;
@@ -630,6 +662,10 @@
 
 <body>
 
+  <!-- Skip link — first focusable element for keyboard users -->
+  <a href="#main-content" class="skip-link">Vai al contenuto principale</a>
+
+
   <!-- ============================================================
        MODAL — each product has its own hardcoded panel.
        No async image loading. Images are directly in HTML.
@@ -639,7 +675,7 @@
     <div class="modal__box">
       <button class="modal__close" id="modal__close-btn" onclick="Modal.close()" aria-label="Chiudi finestra">✕</button>
       <!-- Screen reader title — updated by JS when modal opens -->
-      <h2 id="modal-title-text" class="sr-only"></h2>
+      <h2 id="modal-title-text" class="sr-only">Dettaglio prodotto</h2>
 
       <!-- Panel 0: Finestre per Tetti a Falda -->
       <div class="modal__panel" id="panel-0">
@@ -784,6 +820,8 @@
     <a href="#contact"  onclick="Nav.close()">Preventivo Gratuito</a>
   </div>
 
+
+  <main id="main-content">
 
   <!-- ============================================================
        HERO
@@ -1033,14 +1071,14 @@
       <div class="reveal delay-1">
         <form class="contact__form" id="contactForm">
           <div class="form__row">
-            <div class="form__group"><label>Nome *</label><input type="text" placeholder="Mario" required /></div>
-            <div class="form__group"><label>Cognome *</label><input type="text" placeholder="Rossi" required /></div>
+            <div class="form__group"><label>Nome *</label><input type="text" name="nome" placeholder="Mario" required /></div>
+            <div class="form__group"><label>Cognome *</label><input type="text" name="cognome" placeholder="Rossi" required /></div>
           </div>
-          <div class="form__group"><label>Email *</label><input type="email" placeholder="mario@esempio.it" required /></div>
-          <div class="form__group"><label>Telefono</label><input type="tel" placeholder="+39 xxx xxx xxxx" /></div>
+          <div class="form__group"><label>Email *</label><input type="email" name="email" placeholder="mario@esempio.it" required /></div>
+          <div class="form__group"><label>Telefono</label><input type="tel" name="telefono" placeholder="+39 xxx xxx xxxx" /></div>
           <div class="form__group">
             <label>Tipo di Intervento</label>
-            <select>
+            <select name="servizio">
               <option value="">Seleziona…</option>
               <option>Nuova finestra per tetto</option>
               <option>Lucernario per tetto piano</option>
@@ -1052,7 +1090,7 @@
               <option>Non so ancora – vorrei una consulenza</option>
             </select>
           </div>
-          <div class="form__group"><label>Messaggio *</label><textarea placeholder="Descrivi il tuo progetto o le tue esigenze…" required></textarea></div>
+          <div class="form__group"><label>Messaggio *</label><textarea name="messaggio" placeholder="Descrivi il tuo progetto o le tue esigenze…" required></textarea></div>
           <div class="form__footer">
             <button type="submit" class="btn-red">Invia Messaggio</button>
             <span class="form__note">Risposta entro 24 ore</span>
@@ -1063,6 +1101,9 @@
       </div>
     </div>
   </section>
+
+
+  </main><!-- /#main-content -->
 
 
   <!-- ============================================================
@@ -1088,7 +1129,7 @@
        Reveal — scroll-triggered fade-in with fallback
        Form   — contact form submit handler
        ============================================================ -->
-  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  <script>
 
     // Mark JS as active so reveal animations engage
     document.body.classList.add('js-ready');
