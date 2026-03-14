@@ -60,6 +60,14 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
+  <!-- Preload critical font weight used in nav + headings -->
+  <link
+    rel="preload"
+    as="font"
+    type="font/woff2"
+    href="https://fonts.gstatic.com/s/syne/v22/8vIS7w4qzmVxsWxjBZRjr0FKM_04uQ.woff2"
+    crossorigin
+  />
   <!-- Load fonts async — media="print" trick loads without blocking render,
        onload switches to all so fonts apply once downloaded -->
   <link
@@ -67,6 +75,7 @@
     rel="stylesheet"
     media="print"
     onload="this.media='all'"
+    fetchpriority="high"
   />
   <!-- Fallback for no-JS — loads fonts normally -->
   <noscript>
@@ -74,6 +83,7 @@
   </noscript>
 
   <style>
+
     /* ============================================================
        CSS — TABLE OF CONTENTS
        1.  Variables & Reset
@@ -102,7 +112,8 @@
       --off-white: #f7f7f7;
       --dark:      #111111;
       --mid:       #444444;
-      --light:     #888888;
+      --light:          #696969;   /* AA on white + off-white (5.49:1) */
+      --light-on-dark:  #aaaaaa;   /* AA on dark bg (8.13:1) */
       --border:    #e0e0e0;
       --nav-h:     68px;
       --pad-x:     6rem;
@@ -110,8 +121,21 @@
     }
 
 
-    /* Ensure text stays visible during font load */
+    /* Ensure text stays visible during font load (no invisible text) */
     @font-face { font-display: swap; }
+
+    /* Stabilize layout during font swap (prevents FOUT layout shift).
+       font-synthesis:none stops browser faking bold/italic before fonts load.
+       text-rendering:optimizeLegibility improves kerning once fonts arrive.
+       These two together eliminate the tiny metric shift causing CLS on nav. */
+    .nav__name,
+    .hero__left h1,
+    .section-title,
+    .about__card-name,
+    .hero__stat-pill strong {
+      font-synthesis:       none;
+      text-rendering:       optimizeLegibility;
+    }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
@@ -164,7 +188,7 @@
     .eyebrow::before { content: ''; width: 28px; height: 2px; background: var(--red); }
 
     .section-title {
-      font-family: 'Syne', sans-serif;
+      font-family: 'Syne', system-ui, -apple-system, sans-serif;
       font-size: clamp(1.9rem, 3vw, 2.9rem);
       font-weight: 800;
       line-height: 1.1;
@@ -236,7 +260,7 @@
 
     .modal__body { padding: 2rem 2.5rem 2.5rem; }
     .modal__body .tag-pill { margin-bottom: 1rem; }
-    .modal__body h3 {
+    .modal__panel-title, .modal__body h3 {
       font-family: 'Syne', sans-serif; font-size: 1.5rem; font-weight: 800;
       color: var(--dark); margin-bottom: 0.7rem;
     }
@@ -269,6 +293,10 @@
     .modal__panel.active { display: block; }
 
 
+
+    /* Force nav text to paint immediately — prevents it being chosen as LCP */
+    nav { contain: layout style; }
+    .nav__name { contain: none; will-change: auto; }
     /* ── 5. Navigation ───────────────────────────────────────── */
 
     nav {
@@ -290,7 +318,12 @@
       font-weight: 800; letter-spacing: 0.08em; color: #fff;
     }
     .nav__divider { width: 1px; height: 24px; background: var(--border); }
-    .nav__name { font-family: 'Syne', sans-serif; font-size: 0.9rem; font-weight: 700; color: var(--dark); }
+    .nav__name {
+      font-family: 'Syne', system-ui, -apple-system, sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--dark);
+    }
     .nav__name em { color: var(--red); font-style: normal; }
 
     nav ul { list-style: none; display: flex; align-items: center; gap: 2rem; }
@@ -340,7 +373,7 @@
       animation: fadeUp 0.8s ease both 0.1s;
     }
     .hero__left h1 {
-      font-family: 'Syne', sans-serif;
+      font-family: 'Syne', system-ui, -apple-system, sans-serif;
       font-size: clamp(2.6rem, 4.2vw, 4.4rem);
       font-weight: 800; line-height: 1.06;
       letter-spacing: -0.02em; color: var(--dark); margin-bottom: 1.4rem;
@@ -377,6 +410,12 @@
       box-shadow: 8px 8px 0 var(--red);
     }
     .about__card .tag-pill { margin-bottom: 1.2rem; }
+    .about__card-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 800;
+      margin-bottom: 0.3rem;
+    }
     .about__card h3 { font-family: 'Syne', sans-serif; font-size: 1.5rem; font-weight: 800; margin-bottom: 0.3rem; }
     .about__card__subtitle { font-size: 0.82rem; color: var(--light); margin-bottom: 1.8rem; }
 
@@ -415,7 +454,7 @@
     .product__icon { width: 52px; height: 52px; display: flex; align-items: center; justify-content: center; background: var(--off-white); margin-bottom: 1.3rem; transition: background 0.2s; }
     .product__card:hover .product__icon { background: rgba(227,0,11,0.08); }
     .product__icon svg { stroke: var(--red); fill: none; stroke-width: 1.5; }
-    .product__card h3 { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; color: var(--dark); margin-bottom: 0.6rem; }
+    .product__card-title, .product__card h3 { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; color: var(--dark); margin-bottom: 0.6rem; }
     .product__card p { font-size: 0.85rem; font-weight: 300; line-height: 1.7; color: var(--mid); }
     .product__more { display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 1rem; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--red); }
     .product__more::after { content: '→'; transition: transform 0.2s; }
@@ -439,9 +478,9 @@
       transition: background 0.3s, border-color 0.3s, color 0.3s;
     }
     .process__step:hover .process__step-number { background: var(--red); border-color: var(--red); color: #fff; }
-    .process__step h3 { font-family: 'Syne', sans-serif; font-size: 0.92rem; font-weight: 700; color: rgba(255,255,255,0.6); margin-bottom: 0.5rem; transition: color 0.3s; }
+    .process__step h3 { font-family: 'Syne', sans-serif; font-size: 0.92rem; font-weight: 700; color: rgba(255,255,255,0.75); margin-bottom: 0.5rem; transition: color 0.3s; }
     .process__step:hover h3 { color: #fff; }
-    .process__step p { font-size: 0.82rem; font-weight: 300; line-height: 1.7; color: rgba(255,255,255,0.3); }
+    .process__step p { font-size: 0.82rem; font-weight: 300; line-height: 1.7; color: rgba(255,255,255,0.55); }
 
 
     /* ── 10. Gallery ─────────────────────────────────────────── */
@@ -544,8 +583,8 @@
     }
     .footer__brand { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 800; color: rgba(255,255,255,0.7); }
     .footer__brand em { color: var(--red); font-style: normal; }
-    .footer__copy { margin-top: 0.3rem; font-size: 0.75rem; color: rgba(255,255,255,0.25); }
-    .footer__badge { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; border: 1px solid rgba(255,255,255,0.1); font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.3); }
+    .footer__copy { margin-top: 0.3rem; font-size: 0.75rem; color: rgba(255,255,255,0.55); }
+    .footer__badge { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; border: 1px solid rgba(255,255,255,0.1); font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.6); }
     .footer__badge-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--red); }
 
 
@@ -671,18 +710,18 @@
        No async image loading. Images are directly in HTML.
        JS just shows/hides the right panel.
        ============================================================ -->
-  <div id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title-text">
+  <div id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title-text" aria-hidden="true">
     <div class="modal__box">
       <button class="modal__close" id="modal__close-btn" onclick="Modal.close()" aria-label="Chiudi finestra">✕</button>
       <!-- Screen reader title — updated by JS when modal opens -->
-      <h2 id="modal-title-text" class="sr-only">Dettaglio prodotto</h2>
+      <span id="modal-title-text" class="sr-only">Dettaglio prodotto</span>
 
       <!-- Panel 0: Finestre per Tetti a Falda -->
       <div class="modal__panel" id="panel-0">
         <img class="modal__img" loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=760&fm=webp&q=60&fit=crop&auto=format" alt="Finestra per tetto a falda" />
         <div class="modal__body">
           <div class="tag-pill">La più richiesta</div>
-          <h3>Finestre per Tetti a Falda</h3>
+          <h2 class="modal__panel-title">Finestre per Tetti a Falda</h2>
           <p>Le finestre VELUX per tetti inclinati sono la soluzione più diffusa per mansarde e sottotetti abitabili. Trasformano uno spazio buio in un ambiente luminoso e confortevole.</p>
           <ul class="check-list">
             <li>Apertura a bilico, vasistas o proiezione</li>
@@ -700,7 +739,7 @@
         <img class="modal__img" loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1565538810643-b5bdb714032a?w=760&fm=webp&q=60&fit=crop&auto=format" alt="Lucernario per tetto piano" />
         <div class="modal__body">
           <div class="tag-pill">Ideale per spazi interni</div>
-          <h3>Lucernari per Tetti Piani</h3>
+          <h2 class="modal__panel-title">Lucernari per Tetti Piani</h2>
           <p>I lucernari VELUX per tetti piani o a bassa pendenza portano luce zenitale in ambienti senza pareti esterne — cucine, corridoi, bagni e living.</p>
           <ul class="check-list">
             <li>Per tetti piani o inclinazione 0°–15°</li>
@@ -718,7 +757,7 @@
         <img class="modal__img" loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=760&fm=webp&q=60&fit=crop&auto=format" alt="Finestre abbinate" />
         <div class="modal__body">
           <div class="tag-pill">Per il massimo della luce</div>
-          <h3>Finestre Abbinate</h3>
+          <h2 class="modal__panel-title">Finestre Abbinate</h2>
           <p>Le finestre abbinate VELUX uniscono due o più finestre verticalmente o orizzontalmente, creando una superficie vetrata ampia e una vista panoramica straordinaria.</p>
           <ul class="check-list">
             <li>Combinazioni verticali e orizzontali possibili</li>
@@ -736,7 +775,7 @@
         <img class="modal__img" loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=760&fm=webp&q=60&fit=crop&auto=format" alt="Finestra elettrica VELUX" />
         <div class="modal__body">
           <div class="tag-pill">Smart home ready</div>
-          <h3>Finestre Elettriche</h3>
+          <h2 class="modal__panel-title">Finestre Elettriche</h2>
           <p>Le finestre elettriche VELUX si aprono e chiudono con telecomando, app o comandi vocali. Il sensore pioggia le chiude automaticamente in caso di maltempo.</p>
           <ul class="check-list">
             <li>Telecomando incluso, app VELUX ACTIVE disponibile</li>
@@ -754,7 +793,7 @@
         <img class="modal__img" loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=760&fm=webp&q=60&fit=crop&auto=format" alt="Tende e accessori VELUX" />
         <div class="modal__body">
           <div class="tag-pill">Controllo totale della luce</div>
-          <h3>Accessori e Tende VELUX</h3>
+          <h2 class="modal__panel-title">Accessori e Tende VELUX</h2>
           <p>Le tende VELUX sono progettate su misura per ogni modello di finestra. Dalla oscurante totale alla veneziana, permettono di controllare luce, calore e privacy.</p>
           <ul class="check-list">
             <li>Tende oscuranti, filtranti, veneziane e plissé</li>
@@ -772,7 +811,7 @@
         <img class="modal__img" loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=760&fm=webp&q=60&fit=crop&auto=format" alt="Sostituzione finestra tetto" />
         <div class="modal__body">
           <div class="tag-pill">Rinnova il tuo tetto</div>
-          <h3>Sostituzione e Manutenzione</h3>
+          <h2 class="modal__panel-title">Sostituzione e Manutenzione</h2>
           <p>Sostituisco vecchie finestre per tetti, di qualsiasi marca, con nuovi modelli VELUX ad alta efficienza. Riparo anche meccanismi, guarnizioni e vetri rotti.</p>
           <ul class="check-list">
             <li>Valutazione gratuita dello stato attuale</li>
@@ -806,12 +845,12 @@
       <li><a href="#reviews">Recensioni</a></li>
       <li class="nav__cta"><a href="#contact">Preventivo Gratuito</a></li>
     </ul>
-    <button class="nav__toggle" onclick="Nav.toggle()" aria-label="Menu">
+    <button class="nav__toggle" id="nav__toggle-btn" onclick="Nav.toggle()" aria-label="Apri menu di navigazione" aria-expanded="false" aria-controls="mobileNav">
       <span></span><span></span><span></span>
     </button>
   </nav>
 
-  <div class="mobile-nav" id="mobileNav">
+  <div class="mobile-nav" id="mobileNav" role="navigation" aria-label="Menu mobile">
     <a href="#about"    onclick="Nav.close()">Chi Sono</a>
     <a href="#products" onclick="Nav.close()">Prodotti</a>
     <a href="#process"  onclick="Nav.close()">Come Lavoro</a>
@@ -826,10 +865,10 @@
   <!-- ============================================================
        HERO
        ============================================================ -->
-  <section id="hero">
+  <section id="hero" aria-label="Benvenuto">
     <div class="hero__left">
       <div class="eyebrow">Installatore Certificato VELUX VIP</div>
-      <h1>Più luce.<br><span>Meno pensieri.</span><br>Qualità vera.</h1>
+      <h1 elementtiming="lcp-heading">Più luce.<br><span>Meno pensieri.</span><br>Qualità vera.</h1>
       <p>Installazione professionale di finestre per tetti e lucernari VELUX in tutta la Lombardia. Sopralluogo e preventivo sempre gratuiti.</p>
       <div class="hero__cta">
         <a href="#contact"  class="btn-red">Richiedi Preventivo</a>
@@ -871,7 +910,7 @@
     <div class="section__inner">
       <div class="about__card reveal">
         <div class="tag-pill">Chi sono</div>
-        <h3>Luca Martini</h3>
+        <h2 class="about__card-name">Luca Martini</h2>
         <p class="about__card__subtitle">Installatore Certificato VELUX VIP · Lombardia</p>
         <ul class="check-list">
           <li>Certificazione ufficiale VELUX VIP 2024</li>
@@ -909,44 +948,44 @@
     </div>
     <div class="products__grid reveal delay-1">
 
-      <div class="product__card" tabindex="0" onclick="Modal.open(0)" onkeydown="if(event.key==='Enter')Modal.open(0)">
+      <div class="product__card" role="button" aria-label="Vedi dettagli: Finestre per Tetti a Falda" tabindex="0" onclick="Modal.open(0)" onkeydown="if(event.key==='Enter')Modal.open(0)">
         <div class="product__icon"><svg width="26" height="26" viewBox="0 0 28 28"><rect x="3" y="8" width="22" height="17" rx="1"/><path d="M3 8 L14 2 L25 8"/><line x1="14" y1="8" x2="14" y2="25"/><line x1="3" y1="16" x2="25" y2="16"/></svg></div>
-        <h3>Finestre per Tetti a Falda</h3>
+        <h3 class="product__card-title">Finestre per Tetti a Falda</h3>
         <p>Apertura a bilico, vasistas o proiezione. Doppio o triplo vetro con controllo solare. Ideali per mansarde e sottotetti abitabili.</p>
         <div class="product__more">Vedi immagini</div>
       </div>
 
-      <div class="product__card" tabindex="0" onclick="Modal.open(1)" onkeydown="if(event.key==='Enter')Modal.open(1)">
+      <div class="product__card" role="button" aria-label="Vedi dettagli: Lucernari per Tetti Piani" tabindex="0" onclick="Modal.open(1)" onkeydown="if(event.key==='Enter')Modal.open(1)">
         <div class="product__icon"><svg width="26" height="26" viewBox="0 0 28 28"><rect x="3" y="6" width="22" height="16" rx="1"/><line x1="14" y1="6" x2="14" y2="22"/><line x1="3" y1="14" x2="25" y2="14"/><rect x="6" y="22" width="16" height="4"/></svg></div>
-        <h3>Lucernari per Tetti Piani</h3>
+        <h3 class="product__card-title">Lucernari per Tetti Piani</h3>
         <p>Luce zenitale per cucine, bagni e ambienti interni. Fissi o apribili per ventilazione. Per tetti piani o a bassa pendenza.</p>
         <div class="product__more">Vedi immagini</div>
       </div>
 
-      <div class="product__card" tabindex="0" onclick="Modal.open(2)" onkeydown="if(event.key==='Enter')Modal.open(2)">
+      <div class="product__card" role="button" aria-label="Vedi dettagli: Finestre Abbinate" tabindex="0" onclick="Modal.open(2)" onkeydown="if(event.key==='Enter')Modal.open(2)">
         <div class="product__icon"><svg width="26" height="26" viewBox="0 0 28 28"><rect x="2" y="7" width="11" height="14" rx="1"/><rect x="15" y="7" width="11" height="14" rx="1"/><path d="M2 7 L7.5 2 L13 7"/><path d="M15 7 L20.5 2 L26 7"/></svg></div>
-        <h3>Finestre Abbinate</h3>
+        <h3 class="product__card-title">Finestre Abbinate</h3>
         <p>Due o più finestre unite per una superficie vetrata ampia e scenografica. Vista panoramica e luce al massimo.</p>
         <div class="product__more">Vedi immagini</div>
       </div>
 
-      <div class="product__card" tabindex="0" onclick="Modal.open(3)" onkeydown="if(event.key==='Enter')Modal.open(3)">
+      <div class="product__card" role="button" aria-label="Vedi dettagli: Finestre Elettriche" tabindex="0" onclick="Modal.open(3)" onkeydown="if(event.key==='Enter')Modal.open(3)">
         <div class="product__icon"><svg width="26" height="26" viewBox="0 0 28 28"><rect x="3" y="5" width="22" height="18" rx="1"/><path d="M3 5 L14 0 L25 5"/><rect x="8" y="10" width="12" height="8" rx="1"/><circle cx="14" cy="14" r="2"/></svg></div>
-        <h3>Finestre Elettriche</h3>
+        <h3 class="product__card-title">Finestre Elettriche</h3>
         <p>Motorizzate con telecomando o app VELUX ACTIVE. Chiusura automatica in caso di pioggia. Compatibili con smart home.</p>
         <div class="product__more">Vedi immagini</div>
       </div>
 
-      <div class="product__card" tabindex="0" onclick="Modal.open(4)" onkeydown="if(event.key==='Enter')Modal.open(4)">
+      <div class="product__card" role="button" aria-label="Vedi dettagli: Accessori e Tende" tabindex="0" onclick="Modal.open(4)" onkeydown="if(event.key==='Enter')Modal.open(4)">
         <div class="product__icon"><svg width="26" height="26" viewBox="0 0 28 28"><rect x="3" y="8" width="22" height="16" rx="1"/><path d="M3 8 L14 2 L25 8"/><rect x="7" y="12" width="6" height="6"/><rect x="15" y="12" width="6" height="6"/></svg></div>
-        <h3>Accessori e Tende</h3>
+        <h3 class="product__card-title">Accessori e Tende</h3>
         <p>Tende oscuranti, filtranti e veneziane VELUX. Decine di colori. Manuali o motorizzate, su misura per ogni finestra.</p>
         <div class="product__more">Vedi immagini</div>
       </div>
 
-      <div class="product__card" tabindex="0" onclick="Modal.open(5)" onkeydown="if(event.key==='Enter')Modal.open(5)">
+      <div class="product__card" role="button" aria-label="Vedi dettagli: Sostituzione e Manutenzione" tabindex="0" onclick="Modal.open(5)" onkeydown="if(event.key==='Enter')Modal.open(5)">
         <div class="product__icon"><svg width="26" height="26" viewBox="0 0 28 28"><rect x="3" y="8" width="22" height="16" rx="1"/><path d="M3 8 L14 2 L25 8"/><path d="M8 20 L14 10 L20 20"/><line x1="10" y1="17" x2="18" y2="17"/></svg></div>
-        <h3>Sostituzione e Manutenzione</h3>
+        <h3 class="product__card-title">Sostituzione e Manutenzione</h3>
         <p>Sostituisco vecchie finestre con nuovi modelli VELUX più efficienti. Riparazione meccanismi, guarnizioni e vetri. Valutazione gratuita.</p>
         <div class="product__more">Vedi immagini</div>
       </div>
@@ -991,32 +1030,32 @@
     <div class="gallery__grid reveal delay-1">
 
       <div class="gallery__item">
-        <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=800&fm=webp&q=60&fit=crop&auto=format" alt="Finestra singola Milano" />
+        <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=800&fm=webp&q=60&fit=crop&auto=format" alt="Installazione finestra singola per tetto – Milano" />
         <div class="gallery__label">Finestra singola – Milano</div>
       </div>
 
       <div class="gallery__item">
-        <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&fm=webp&q=60&fit=crop&auto=format" alt="Doppia abbinata Torino" />
+        <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&fm=webp&q=60&fit=crop&auto=format" alt="Installazione finestre doppie abbinate – Torino" />
         <div class="gallery__label">Doppia abbinata – Torino</div>
       </div>
 
       <div class="gallery__item">
-        <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1565538810643-b5bdb714032a?w=800&fm=webp&q=60&fit=crop&auto=format" alt="Lucernario Bergamo" />
+        <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1565538810643-b5bdb714032a?w=800&fm=webp&q=60&fit=crop&auto=format" alt="Installazione lucernario per tetto piano – Bergamo" />
         <div class="gallery__label">Lucernario – Bergamo</div>
       </div>
 
       <div class="gallery__item">
-        <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800&fm=webp&q=60&fit=crop&auto=format" alt="Mansarda Monza" />
+        <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800&fm=webp&q=60&fit=crop&auto=format" alt="Installazione finestre per mansarda – Monza" />
         <div class="gallery__label">Mansarda – Monza</div>
       </div>
 
       <div class="gallery__item">
-        <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=800&fm=webp&q=60&fit=crop&auto=format" alt="Lucernario Como" />
+        <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=800&fm=webp&q=60&fit=crop&auto=format" alt="Lucernario circolare installato – Como" />
         <div class="gallery__label">Lucernario – Como</div>
       </div>
 
       <div class="gallery__item">
-        <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1505843513577-22bb7d21e455?w=800&fm=webp&q=60&fit=crop&auto=format" alt="Tripla finestra Varese" />
+        <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1505843513577-22bb7d21e455?w=800&fm=webp&q=60&fit=crop&auto=format" alt="Installazione tripla finestra per tetto – Varese" />
         <div class="gallery__label">Tripla finestra – Varese</div>
       </div>
 
@@ -1071,14 +1110,14 @@
       <div class="reveal delay-1">
         <form class="contact__form" id="contactForm">
           <div class="form__row">
-            <div class="form__group"><label>Nome *</label><input type="text" name="nome" placeholder="Mario" required /></div>
-            <div class="form__group"><label>Cognome *</label><input type="text" name="cognome" placeholder="Rossi" required /></div>
+            <div class="form__group"><label for="nome">Nome *</label><input id="nome" type="text" name="nome" placeholder="Mario" required /></div>
+            <div class="form__group"><label for="cognome">Cognome *</label><input id="cognome" type="text" name="cognome" placeholder="Rossi" required /></div>
           </div>
-          <div class="form__group"><label>Email *</label><input type="email" name="email" placeholder="mario@esempio.it" required /></div>
-          <div class="form__group"><label>Telefono</label><input type="tel" name="telefono" placeholder="+39 xxx xxx xxxx" /></div>
+          <div class="form__group"><label for="email">Email *</label><input id="email" type="email" name="email" placeholder="mario@esempio.it" required /></div>
+          <div class="form__group"><label for="telefono">Telefono</label><input id="telefono" type="tel" name="telefono" placeholder="+39 xxx xxx xxxx" /></div>
           <div class="form__group">
-            <label>Tipo di Intervento</label>
-            <select name="servizio">
+            <label for="servizio">Tipo di Intervento</label>
+            <select id="servizio" name="servizio">
               <option value="">Seleziona…</option>
               <option>Nuova finestra per tetto</option>
               <option>Lucernario per tetto piano</option>
@@ -1090,7 +1129,7 @@
               <option>Non so ancora – vorrei una consulenza</option>
             </select>
           </div>
-          <div class="form__group"><label>Messaggio *</label><textarea name="messaggio" placeholder="Descrivi il tuo progetto o le tue esigenze…" required></textarea></div>
+          <div class="form__group"><label for="messaggio">Messaggio *</label><textarea id="messaggio" name="messaggio" placeholder="Descrivi il tuo progetto o le tue esigenze…" required></textarea></div>
           <div class="form__footer">
             <button type="submit" class="btn-red">Invia Messaggio</button>
             <span class="form__note">Risposta entro 24 ore</span>
@@ -1109,7 +1148,7 @@
   <!-- ============================================================
        FOOTER
        ============================================================ -->
-  <footer>
+  <footer role="contentinfo" aria-label="Piè di pagina">
     <div>
       <div class="footer__brand">Luca <em>Martini</em></div>
       <p class="footer__copy">© 2024 · Installatore Certificato VELUX VIP · P.IVA 00000000000</p>
@@ -1156,13 +1195,14 @@
         panel.classList.add('active');
 
         // Update the sr-only label so screen readers announce the right title
-        const panelTitle = panel.querySelector('h3');
+        const panelTitle = panel.querySelector('h2.modal__panel-title');
         if (panelTitle && this.srTitle) {
           this.srTitle.textContent = panelTitle.textContent;
         }
 
         // Show overlay and lock scroll
         this.overlay.classList.add('active');
+        this.overlay.removeAttribute('aria-hidden');  // make visible to screen readers
         document.body.style.overflow = 'hidden';
 
         // Move focus into modal for keyboard/screen reader users
@@ -1171,6 +1211,7 @@
 
       close() {
         this.overlay.classList.remove('active');
+        this.overlay.setAttribute('aria-hidden', 'true');  // hide from screen readers
         document.body.style.overflow = '';
 
         // Return focus to the element that opened the modal
@@ -1218,9 +1259,18 @@
        Mobile dropdown open/close.
        ──────────────────────────────────────────────────────── */
     const Nav = {
-      el: document.getElementById('mobileNav'),
-      toggle() { this.el.classList.toggle('open'); },
-      close()  { this.el.classList.remove('open'); },
+      el:     document.getElementById('mobileNav'),
+      btn:    document.getElementById('nav__toggle-btn'),
+
+      toggle() {
+        const isOpen = this.el.classList.toggle('open');
+        this.btn.setAttribute('aria-expanded', isOpen);
+      },
+
+      close() {
+        this.el.classList.remove('open');
+        this.btn.setAttribute('aria-expanded', 'false');
+      },
     };
 
 
@@ -1408,17 +1458,36 @@
       links:    Array.from(document.querySelectorAll('nav ul a[href^="#"]')),
       sections: Array.from(document.querySelectorAll('section[id]')),
 
+      // Cache of { id, top } — built once, never read during scroll.
+      // Prevents forced reflow from reading offsetTop on every scroll event.
+      cache: [],
+
+      // Rebuild cache on load and on resize (layout may shift)
+      buildCache() {
+        this.cache = this.sections.map(s => ({
+          id:  s.id,
+          top: s.getBoundingClientRect().top + window.scrollY,
+        }));
+      },
+
+      // Only reads from cache — no DOM geometry reads here
       update() {
         const scrollY = window.scrollY + 100;
         let current = '';
-        this.sections.forEach(s => { if (s.offsetTop <= scrollY) current = s.id; });
+        this.cache.forEach(s => { if (s.top <= scrollY) current = s.id; });
         this.links.forEach(a => {
           a.classList.toggle('nav__active', a.getAttribute('href') === '#' + current);
         });
       },
 
       init() {
-        window.addEventListener('scroll', () => this.update(), { passive: true });
+        // Build cache once after layout is stable
+        window.addEventListener('load',   () => this.buildCache());
+        // Rebuild if user resizes window (positions change)
+        window.addEventListener('resize', () => this.buildCache(), { passive: true });
+        // Scroll handler is now read-only — no layout thrashing
+        window.addEventListener('scroll', () => this.update(),     { passive: true });
+        this.buildCache();
         this.update();
       },
     };
