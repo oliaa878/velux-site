@@ -145,7 +145,11 @@
       background: var(--white);
       color: var(--dark);
       overflow-x: hidden;
+      /* Prevent any child from breaking out of viewport width */
+      max-width: 100vw;
     }
+    /* Belt-and-braces: catch any element that bleeds horizontally */
+    *, *::before, *::after { max-width: 100%; }
 
     img { display: block; max-width: 100%; height: auto; }
 
@@ -189,7 +193,7 @@
 
     .section-title {
       font-family: 'Syne', system-ui, -apple-system, sans-serif;
-      font-size: clamp(1.9rem, 3vw, 2.9rem);
+      font-size: clamp(1.5rem, 5vw, 2.9rem);
       font-weight: 800;
       line-height: 1.1;
       letter-spacing: -0.02em;
@@ -237,7 +241,8 @@
     #modal-overlay {
       position: fixed; inset: 0; z-index: 900;
       display: flex; align-items: center; justify-content: center;
-      padding: 1.5rem;
+      /* Enough padding to show modal doesn't fill screen edge-to-edge */
+      padding: 0.75rem;
       background: rgba(0, 0, 0, 0.88);
       opacity: 0; pointer-events: none;
       transition: opacity 0.25s ease;
@@ -245,11 +250,18 @@
     #modal-overlay.active { opacity: 1; pointer-events: all; }
 
     .modal__box {
-      position: relative; width: 100%; max-width: 760px;
-      max-height: 90vh; overflow-y: auto;
+      position: relative;
+      width: 100%;
+      max-width: 760px;
+      /* On small screens, subtract overlay padding (1.5rem each side = 3rem) */
+      max-height: 90vh;
+      overflow-y: auto;
+      overflow-x: hidden;
       background: var(--white);
       transform: translateY(20px) scale(0.97);
       transition: transform 0.3s ease;
+      /* Prevent content inside from breaking out */
+      box-sizing: border-box;
     }
     #modal-overlay.active .modal__box { transform: translateY(0) scale(1); }
 
@@ -374,7 +386,7 @@
     }
     .hero__left h1 {
       font-family: 'Syne', system-ui, -apple-system, sans-serif;
-      font-size: clamp(2.6rem, 4.2vw, 4.4rem);
+      font-size: clamp(2rem, 7vw, 4.4rem);
       font-weight: 800; line-height: 1.06;
       letter-spacing: -0.02em; color: var(--dark); margin-bottom: 1.4rem;
     }
@@ -432,7 +444,7 @@
     /* ── 8. Products ─────────────────────────────────────────── */
 
     #products { padding: var(--pad-y) var(--pad-x); background: var(--white); }
-    .products__header { max-width: 560px; margin-bottom: 3.5rem; }
+    .products__header { max-width: 560px; margin-bottom: 3.5rem; width: 100%; }
     .products__header h2 { margin-bottom: 0.8rem; }
     .products__header p { font-size: 0.96rem; font-weight: 300; line-height: 1.8; color: var(--mid); }
 
@@ -475,12 +487,41 @@
       font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 800;
       color: rgba(255,255,255,0.3); background: var(--dark);
       border: 2px solid rgba(255,255,255,0.15);
-      transition: background 0.3s, border-color 0.3s, color 0.3s;
+      transition: background 0.4s ease, border-color 0.4s ease,
+                  color 0.4s ease, box-shadow 0.4s ease;
     }
+    /* Hover keeps working */
     .process__step:hover .process__step-number { background: var(--red); border-color: var(--red); color: #fff; }
-    .process__step h3 { font-family: 'Syne', sans-serif; font-size: 0.92rem; font-weight: 700; color: rgba(255,255,255,0.75); margin-bottom: 0.5rem; transition: color 0.3s; }
+    .process__step h3 {
+      font-family: 'Syne', sans-serif; font-size: 0.92rem; font-weight: 700;
+      color: rgba(255,255,255,0.75); margin-bottom: 0.5rem;
+      transition: color 0.4s ease;
+    }
     .process__step:hover h3 { color: #fff; }
     .process__step p { font-size: 0.82rem; font-weight: 300; line-height: 1.7; color: rgba(255,255,255,0.55); }
+
+    /* ── Scroll-triggered active state ──────────────────────
+       JS adds .active class to each step in sequence        */
+    .process__step.active .process__step-number {
+      background:   var(--red);
+      border-color: var(--red);
+      color:        #ffffff;
+      box-shadow:   0 0 0 6px rgba(227,0,11,0.18);
+    }
+    .process__step.active h3 { color: #ffffff; }
+    .process__step.active p  { color: rgba(255,255,255,0.8); }
+
+    /* Progress line that fills left-to-right as steps activate */
+    .process__steps { position: relative; }
+    .process__progress {
+      position: absolute;
+      top: 27px; left: 12%;
+      height: 1px;
+      background: var(--red);
+      width: 0%;
+      transition: width 0.5s ease;
+      z-index: 0;
+    }
 
 
     /* ── 10. Gallery ─────────────────────────────────────────── */
@@ -643,7 +684,21 @@
     }
 
     @media (max-width: 600px) {
-      :root { --pad-x: 1.5rem; --pad-y: 3.5rem; }
+      :root { --pad-x: 1.2rem; --pad-y: 3rem; }
+      /* Stats row — shrink numbers so all 3 fit on narrow screens */
+      .about__card__stat strong { font-size: 1.4rem; }
+      .about__card__stat span   { font-size: 0.62rem; letter-spacing: 0.02em; }
+      .about__card__stat        { padding: 0 0.4rem; }
+      /* Reduce box-shadow offset so card doesn't clip on narrow phones */
+      .about__card              { box-shadow: 4px 4px 0 var(--red); padding: 1.8rem; }
+      /* Modal tighter on small phones */
+      .modal__body              { padding: 1.2rem; }
+      .modal__panel-title       { font-size: 1.25rem; }
+      /* Prevent section titles breaking layout */
+      .section-title            { word-break: break-word; }
+      /* Nav name never wraps or clips */
+      .nav__name                { font-size: 0.8rem; }
+      .nav__velux-badge span    { font-size: 0.85rem; }
       .products__grid { grid-template-columns: 1fr; }
       .process__steps { grid-template-columns: 1fr 1fr; gap: 1.5rem; }
       .reviews__grid { grid-template-columns: 1fr; }
@@ -1003,11 +1058,13 @@
       <h2 class="section-title">Il processo in <span>5 passi.</span></h2>
     </div>
     <div class="process__steps reveal delay-1">
-      <div class="process__step"><div class="process__step-number">01</div><h3>Sopralluogo Gratuito</h3><p>Vengo a valutare tetto, misure ed esigenze. Nessun costo, nessun impegno.</p></div>
-      <div class="process__step"><div class="process__step-number">02</div><h3>Preventivo Chiaro</h3><p>Prodotti, tempi e costi definiti. Niente sorprese: quello che leggi è quello che paghi.</p></div>
-      <div class="process__step"><div class="process__step-number">03</div><h3>Scelta Prodotto</h3><p>Ti guido nel modello giusto per il tuo tetto, budget e preferenze estetiche.</p></div>
-      <div class="process__step"><div class="process__step-number">04</div><h3>Installazione</h3><p>Lavoro preciso secondo le specifiche VELUX. Pulito, veloce, senza danni ai tuoi spazi.</p></div>
-      <div class="process__step"><div class="process__step-number">05</div><h3>Garanzia e Supporto</h3><p>Documentazione completa e garanzia estesa. Disponibile per ogni domanda post-installazione.</p></div>
+      <!-- Animated progress line fills as steps activate -->
+      <div class="process__progress" id="processProgress"></div>
+      <div class="process__step"><div class="process__step-number">1</div><h3>Sopralluogo Gratuito</h3><p>Vengo a valutare tetto, misure ed esigenze. Nessun costo, nessun impegno.</p></div>
+      <div class="process__step"><div class="process__step-number">2</div><h3>Preventivo Chiaro</h3><p>Prodotti, tempi e costi definiti. Niente sorprese: quello che leggi è quello che paghi.</p></div>
+      <div class="process__step"><div class="process__step-number">3</div><h3>Scelta Prodotto</h3><p>Ti guido nel modello giusto per il tuo tetto, budget e preferenze estetiche.</p></div>
+      <div class="process__step"><div class="process__step-number">4</div><h3>Installazione</h3><p>Lavoro preciso secondo le specifiche VELUX. Pulito, veloce, senza danni ai tuoi spazi.</p></div>
+      <div class="process__step"><div class="process__step-number">5</div><h3>Garanzia e Supporto</h3><p>Documentazione completa e garanzia estesa. Disponibile per ogni domanda post-installazione.</p></div>
     </div>
   </section>
 
@@ -1453,6 +1510,87 @@
     Form.init();
 
 
+    /* ── Process steps — scroll-triggered sequence ───────────
+       Each step lights up in order as the section scrolls
+       into view. Uses IntersectionObserver on the section,
+       then staggers activation with setTimeout per step.
+       ──────────────────────────────────────────────────────── */
+    const ProcessSteps = {
+      steps:    Array.from(document.querySelectorAll('.process__step')),
+      progress: document.getElementById('processProgress'),
+      section:  document.getElementById('process'),
+      current:  -1,   // currently lit step index
+      timer:    null, // debounce handle
+
+      // ── Apply active state with a visible pause between transitions
+      setActive(index, instant = false) {
+        if (index === this.current) return;
+        clearTimeout(this.timer);
+
+        const apply = () => {
+          this.steps.forEach((s, i) => s.classList.toggle('active', i === index));
+          this.current = index;
+          if (this.progress) {
+            const pct = index < 0 ? 0 : ((index + 1) / this.steps.length) * 76;
+            this.progress.style.width = pct + '%';
+          }
+        };
+
+        if (instant) {
+          apply();
+        } else {
+          // Clear first, pause 180ms, then light the new one
+          this.steps.forEach(s => s.classList.remove('active'));
+          this.timer = setTimeout(apply, 180);
+        }
+      },
+
+      // ── Shared scroll logic for both mobile and desktop ──────────
+      // Works by finding which "band" of the section the viewport
+      // centre currently sits in. Divide section height into N equal
+      // bands — one per step. Whichever band contains the viewport
+      // centre is the active step.
+      // This approach is identical for both layouts — no separate
+      // IntersectionObserver needed, no rootMargin guesswork.
+      update() {
+        const rect  = this.section.getBoundingClientRect();
+        const viewH = window.innerHeight;
+        const secH  = this.section.offsetHeight;
+
+        // Viewport centre relative to section top (can be negative or > secH)
+        const centre = (viewH / 2) - rect.top;
+
+        // Section not yet in view or already passed
+        if (centre < -viewH * 0.1 || centre > secH + viewH * 0.1) {
+          this.setActive(-1, true);
+          return;
+        }
+
+        // Clamp centre to section bounds
+        const clamped = Math.max(0, Math.min(secH, centre));
+
+        // Map to step index — which equal band does this fall in?
+        const index = Math.min(
+          this.steps.length - 1,
+          Math.floor((clamped / secH) * this.steps.length)
+        );
+
+        this.setActive(index);
+      },
+
+      init() {
+        if (!this.steps.length || !this.section) return;
+
+        window.addEventListener('scroll', () => this.update(), { passive: true });
+        window.addEventListener('resize', () => this.update(), { passive: true });
+        window.addEventListener('load',   () => this.update());
+        this.update();
+      },
+    };
+
+    ProcessSteps.init();
+
+
     /* ── Active nav highlight on scroll ──────────────────────── */
     const NavHighlight = {
       links:    Array.from(document.querySelectorAll('nav ul a[href^="#"]')),
@@ -1497,4 +1635,4 @@
   </script>
 
 </body>
-</html>
+  </html>
