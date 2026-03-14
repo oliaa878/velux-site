@@ -1,0 +1,1390 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<!--
+  ╔══════════════════════════════════════════════════════════════════╗
+  ║                                                                  ║
+  ║   VELUX VIP — Sito Web Professionale                             ║
+  ║   Luca Martini · Installatore Certificato VELUX VIP              ║
+  ║                                                                  ║
+  ╠══════════════════════════════════════════════════════════════════╣
+  ║                                                                  ║
+  ║   Sviluppato da:  [Il tuo nome]                                  ║
+  ║   Assistito da:   Claude (Anthropic AI)                          ║
+  ║   Versione:       7.0                                            ║
+  ║   Data:           2024                                           ║
+  ║                                                                  ║
+  ╠══════════════════════════════════════════════════════════════════╣
+  ║                                                                  ║
+  ║   CHANGELOG                                                      ║
+  ║   v5.0 – Immagini hardcoded direttamente nell'HTML.              ║
+  ║           Modal completamente riscritto senza async.             ║
+  ║           Gallery con img reali. Zero dipendenze esterne         ║
+  ║           tranne Google Fonts e Unsplash (immagini demo).        ║
+  ║                                                                  ║
+  ╠══════════════════════════════════════════════════════════════════╣
+  ║                                                                  ║
+  ║   COSA PERSONALIZZARE (per Luca)                                 ║
+  ║   1. Cerca "Luca Martini"   → il tuo nome vero                   ║
+  ║   2. Cerca "+39 333 456"    → il tuo numero reale                ║
+  ║   3. Cerca "lucamartini-"   → la tua email vera                  ║
+  ║   4. Cerca "P.IVA 000"      → la tua P.IVA vera                  ║
+  ║   5. Gallery <img src="..."> → foto reali dei tuoi lavori        ║
+  ║   6. Modal <img src="...">  → foto reali dei prodotti            ║
+  ║                                                                  ║
+  ╚══════════════════════════════════════════════════════════════════╝
+-->
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Luca Martini – Installatore VELUX Certificato</title>
+
+  <!-- SEO -->
+  <meta name="description" content="Luca Martini, installatore certificato VELUX VIP in Lombardia. Installazione professionale di finestre per tetti e lucernari. Sopralluogo e preventivo gratuiti." />
+  <meta name="robots" content="index, follow" />
+
+  <!-- Open Graph — controls how the site looks when shared on social media -->
+  <meta property="og:type"        content="website" />
+  <meta property="og:title"       content="Luca Martini – Installatore VELUX Certificato" />
+  <meta property="og:description" content="Installazione professionale di finestre per tetti e lucernari VELUX in Lombardia. Preventivo gratuito." />
+  <meta property="og:image"       content="https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=1200&fm=webp&q=65&fit=crop&auto=format" />
+  <meta property="og:url"         content="https://lucamartini-velux.it" />
+
+  <!-- Twitter card -->
+  <meta name="twitter:card"        content="summary_large_image" />
+  <meta name="twitter:title"       content="Luca Martini – Installatore VELUX Certificato" />
+  <meta name="twitter:description" content="Installazione professionale di finestre per tetti e lucernari VELUX in Lombardia." />
+  <meta name="twitter:image"       content="https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=1200&fm=webp&q=65&fit=crop&auto=format" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Lato:ital,wght@0,300;0,400;0,700;1,300&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ============================================================
+       CSS — TABLE OF CONTENTS
+       1.  Variables & Reset
+       2.  Typography & Shared helpers
+       3.  Buttons
+       4.  Modal
+       5.  Navigation
+       6.  Hero
+       7.  About
+       8.  Products
+       9.  Process
+       10. Gallery
+       11. Reviews
+       12. Contact & Form
+       13. Footer
+       14. Scroll Reveal animation
+       15. Responsive breakpoints
+       ============================================================ */
+
+
+    /* ── 1. Variables & Reset ────────────────────────────────── */
+    :root {
+      --red:       #e3000b;
+      --red-dark:  #b50009;
+      --white:     #ffffff;
+      --off-white: #f7f7f7;
+      --dark:      #111111;
+      --mid:       #444444;
+      --light:     #888888;
+      --border:    #e0e0e0;
+      --nav-h:     68px;
+      --pad-x:     6rem;
+      --pad-y:     6rem;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      font-family: 'Lato', sans-serif;
+      background: var(--white);
+      color: var(--dark);
+      overflow-x: hidden;
+    }
+
+    img { display: block; max-width: 100%; height: auto; }
+
+    /* Screen-reader only — visually hidden but accessible */
+    .sr-only {
+      position: absolute; width: 1px; height: 1px;
+      padding: 0; margin: -1px; overflow: hidden;
+      clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+    }
+
+
+    /* ── 2. Typography & Shared helpers ─────────────────────── */
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 0.9rem;
+    }
+    .eyebrow::before { content: ''; width: 28px; height: 2px; background: var(--red); }
+
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(1.9rem, 3vw, 2.9rem);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--dark);
+    }
+    .section-title span { color: var(--red); }
+
+    .tag-pill {
+      display: inline-block;
+      background: var(--red);
+      color: #fff;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.75rem;
+    }
+
+    .check-list { list-style: none; display: flex; flex-direction: column; gap: 0.65rem; }
+    .check-list li { display: flex; align-items: flex-start; gap: 0.65rem; font-size: 0.9rem; color: var(--mid); }
+    .check-list li::before {
+      content: '✓'; flex-shrink: 0; width: 20px; height: 20px;
+      background: var(--red); color: #fff; font-size: 0.62rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+
+    /* ── 3. Buttons ─────────────────────────────────────────── */
+
+    .btn-red, .btn-outline {
+      display: inline-block; padding: 0.9rem 2rem;
+      font-family: 'Lato', sans-serif; font-size: 0.76rem; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase; text-decoration: none;
+      border: 2px solid transparent; cursor: pointer;
+      transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.15s;
+    }
+    .btn-red { background: var(--red); color: #fff; border-color: var(--red); }
+    .btn-red:hover { background: var(--red-dark); border-color: var(--red-dark); transform: translateY(-2px); }
+    .btn-outline { background: transparent; color: var(--dark); border-color: var(--dark); }
+    .btn-outline:hover { background: var(--dark); color: #fff; transform: translateY(-2px); }
+
+
+    /* ── 4. Modal ────────────────────────────────────────────── */
+
+    #modal-overlay {
+      position: fixed; inset: 0; z-index: 900;
+      display: flex; align-items: center; justify-content: center;
+      padding: 1.5rem;
+      background: rgba(0, 0, 0, 0.88);
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+    #modal-overlay.active { opacity: 1; pointer-events: all; }
+
+    .modal__box {
+      position: relative; width: 100%; max-width: 760px;
+      max-height: 90vh; overflow-y: auto;
+      background: var(--white);
+      transform: translateY(20px) scale(0.97);
+      transition: transform 0.3s ease;
+    }
+    #modal-overlay.active .modal__box { transform: translateY(0) scale(1); }
+
+    .modal__img {
+      width: 100%; height: 320px;
+      object-fit: cover; display: block;
+    }
+
+    .modal__body { padding: 2rem 2.5rem 2.5rem; }
+    .modal__body .tag-pill { margin-bottom: 1rem; }
+    .modal__body h3 {
+      font-family: 'Syne', sans-serif; font-size: 1.5rem; font-weight: 800;
+      color: var(--dark); margin-bottom: 0.7rem;
+    }
+    .modal__body p { color: var(--mid); font-size: 0.96rem; font-weight: 300; line-height: 1.85; margin-bottom: 1.2rem; }
+    .modal__body .check-list { margin-bottom: 1.5rem; }
+    .modal__body .check-list li { font-size: 0.88rem; }
+
+    .modal__cta {
+      display: inline-block; padding: 0.85rem 2rem;
+      background: var(--red); color: #fff;
+      font-family: 'Lato', sans-serif; font-size: 0.78rem; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      text-decoration: none; cursor: pointer; border: none;
+      transition: background 0.2s;
+    }
+    .modal__cta:hover { background: var(--red-dark); }
+
+    .modal__close {
+      position: absolute; top: 1rem; right: 1rem; z-index: 10;
+      width: 36px; height: 36px;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(0,0,0,0.55); color: #fff;
+      font-size: 1.1rem; border: none; border-radius: 2px; cursor: pointer;
+      transition: background 0.2s;
+    }
+    .modal__close:hover { background: var(--red); }
+
+    /* Hidden modal panels — only active one is shown */
+    .modal__panel { display: none; }
+    .modal__panel.active { display: block; }
+
+
+    /* ── 5. Navigation ───────────────────────────────────────── */
+
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      height: var(--nav-h);
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0 3rem;
+      background: rgba(255,255,255,0.97);
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      border-bottom: 2px solid var(--red);
+    }
+    .nav-logo { display: flex; align-items: center; gap: 0.8rem; text-decoration: none; }
+    .nav__velux-badge {
+      height: 26px; display: flex; align-items: center;
+      justify-content: center; padding: 0 0.7rem; background: var(--red);
+    }
+    .nav__velux-badge span {
+      font-family: 'Syne', sans-serif; font-size: 0.95rem;
+      font-weight: 800; letter-spacing: 0.08em; color: #fff;
+    }
+    .nav__divider { width: 1px; height: 24px; background: var(--border); }
+    .nav__name { font-family: 'Syne', sans-serif; font-size: 0.9rem; font-weight: 700; color: var(--dark); }
+    .nav__name em { color: var(--red); font-style: normal; }
+
+    nav ul { list-style: none; display: flex; align-items: center; gap: 2rem; }
+    nav ul a {
+      font-size: 0.78rem; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--mid); text-decoration: none;
+      white-space: nowrap; transition: color 0.2s;
+    }
+    nav ul a:hover { color: var(--red); }
+    nav ul .nav__cta a { padding: 0.5rem 1.1rem; background: var(--red); color: #fff; transition: background 0.2s; }
+    nav ul .nav__cta a:hover { background: var(--red-dark); }
+
+    .nav__toggle {
+      display: none; flex-direction: column; gap: 5px;
+      background: none; border: none; padding: 4px; cursor: pointer;
+    }
+    .nav__toggle span { display: block; width: 24px; height: 2px; background: var(--dark); }
+
+    .mobile-nav {
+      display: none; position: fixed;
+      top: var(--nav-h); left: 0; right: 0; z-index: 99;
+      flex-direction: column; padding: 1rem 0;
+      background: #fff; border-bottom: 2px solid var(--red);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    }
+    .mobile-nav.open { display: flex; }
+    .mobile-nav a {
+      padding: 0.9rem 2rem; font-size: 0.85rem; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--mid); text-decoration: none;
+      border-bottom: 1px solid var(--border); transition: color 0.2s;
+    }
+    .mobile-nav a:last-child { border-bottom: none; background: var(--red); color: #fff; }
+    .mobile-nav a:hover { color: var(--red); }
+    .mobile-nav a:last-child:hover { background: var(--red-dark); color: #fff; }
+
+
+    /* ── 6. Hero ─────────────────────────────────────────────── */
+
+    #hero {
+      min-height: 100vh; padding-top: var(--nav-h);
+      display: grid; grid-template-columns: 1fr 1fr;
+    }
+    .hero__left {
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 5rem 4rem 5rem var(--pad-x);
+      animation: fadeUp 0.8s ease both 0.1s;
+    }
+    .hero__left h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2.6rem, 4.2vw, 4.4rem);
+      font-weight: 800; line-height: 1.06;
+      letter-spacing: -0.02em; color: var(--dark); margin-bottom: 1.4rem;
+    }
+    .hero__left h1 span { color: var(--red); }
+    .hero__left p { max-width: 400px; font-size: 1rem; font-weight: 300; line-height: 1.8; color: var(--mid); margin-bottom: 2.5rem; }
+    .hero__cta { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+    .hero__right {
+      position: relative; display: flex; align-items: center; justify-content: center;
+      background: var(--dark); overflow: hidden;
+      animation: fadeIn 1s ease both 0.3s;
+    }
+    .hero__pattern {
+      position: absolute; inset: 0;
+      background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 59px, rgba(255,255,255,0.03) 60px),
+        repeating-linear-gradient(90deg, transparent, transparent 59px, rgba(255,255,255,0.03) 60px);
+    }
+    .hero__visual { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 1.5rem; }
+    .hero__stat-pill { display: inline-flex; flex-direction: column; align-items: center; padding: 0.8rem 2rem; background: var(--red); color: #fff; }
+    .hero__stat-pill strong { font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; line-height: 1; }
+    .hero__stat-pill span { margin-top: 2px; font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.85; }
+
+
+    /* ── 7. About ────────────────────────────────────────────── */
+
+    #about { padding: var(--pad-y) var(--pad-x); background: var(--off-white); }
+    #about .section__inner { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; }
+
+    .about__card {
+      position: relative; padding: 2.5rem;
+      background: var(--white); border: 1px solid var(--border);
+      box-shadow: 8px 8px 0 var(--red);
+    }
+    .about__card .tag-pill { margin-bottom: 1.2rem; }
+    .about__card h3 { font-family: 'Syne', sans-serif; font-size: 1.5rem; font-weight: 800; margin-bottom: 0.3rem; }
+    .about__card__subtitle { font-size: 0.82rem; color: var(--light); margin-bottom: 1.8rem; }
+
+    .about__card__stats { display: flex; margin-top: 2rem; padding-top: 1.8rem; border-top: 1px solid var(--border); }
+    .about__card__stat { flex: 1; padding: 0 0.8rem; text-align: center; border-right: 1px solid var(--border); }
+    .about__card__stat:last-child { border-right: none; }
+    .about__card__stat strong { display: block; font-family: 'Syne', sans-serif; font-size: 1.9rem; font-weight: 800; line-height: 1; color: var(--red); }
+    .about__card__stat span { display: block; margin-top: 0.3rem; font-size: 0.7rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--light); }
+
+    .about__text h2 { margin-bottom: 1.2rem; }
+    .about__text p { font-size: 0.96rem; font-weight: 300; line-height: 1.85; color: var(--mid); margin-bottom: 1.1rem; }
+
+
+    /* ── 8. Products ─────────────────────────────────────────── */
+
+    #products { padding: var(--pad-y) var(--pad-x); background: var(--white); }
+    .products__header { max-width: 560px; margin-bottom: 3.5rem; }
+    .products__header h2 { margin-bottom: 0.8rem; }
+    .products__header p { font-size: 0.96rem; font-weight: 300; line-height: 1.8; color: var(--mid); }
+
+    .products__grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); }
+
+    .product__card {
+      position: relative; padding: 2.2rem 1.8rem;
+      background: var(--white); cursor: pointer; overflow: hidden;
+      transition: background 0.2s; -webkit-tap-highlight-color: transparent;
+    }
+    .product__card:hover, .product__card:focus { background: var(--off-white); outline: none; }
+    .product__card::before {
+      content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: 3px;
+      background: var(--red); transform: scaleY(0); transform-origin: bottom;
+      transition: transform 0.3s ease;
+    }
+    .product__card:hover::before, .product__card:focus::before { transform: scaleY(1); }
+
+    .product__icon { width: 52px; height: 52px; display: flex; align-items: center; justify-content: center; background: var(--off-white); margin-bottom: 1.3rem; transition: background 0.2s; }
+    .product__card:hover .product__icon { background: rgba(227,0,11,0.08); }
+    .product__icon svg { stroke: var(--red); fill: none; stroke-width: 1.5; }
+    .product__card h3 { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; color: var(--dark); margin-bottom: 0.6rem; }
+    .product__card p { font-size: 0.85rem; font-weight: 300; line-height: 1.7; color: var(--mid); }
+    .product__more { display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 1rem; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--red); }
+    .product__more::after { content: '→'; transition: transform 0.2s; }
+    .product__card:hover .product__more::after { transform: translateX(4px); }
+
+
+    /* ── 9. Process ──────────────────────────────────────────── */
+
+    #process { padding: var(--pad-y) var(--pad-x); background: var(--dark); }
+    #process .section-title { color: #fff; }
+
+    .process__steps { position: relative; display: grid; grid-template-columns: repeat(5,1fr); margin-top: 3.5rem; }
+    .process__steps::before { content: ''; position: absolute; top: 27px; left: 12%; right: 12%; height: 1px; background: rgba(255,255,255,0.1); }
+    .process__step { padding: 0 1.2rem; }
+    .process__step-number {
+      position: relative; z-index: 1; width: 54px; height: 54px;
+      display: flex; align-items: center; justify-content: center; margin-bottom: 1.4rem;
+      font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 800;
+      color: rgba(255,255,255,0.3); background: var(--dark);
+      border: 2px solid rgba(255,255,255,0.15);
+      transition: background 0.3s, border-color 0.3s, color 0.3s;
+    }
+    .process__step:hover .process__step-number { background: var(--red); border-color: var(--red); color: #fff; }
+    .process__step h3 { font-family: 'Syne', sans-serif; font-size: 0.92rem; font-weight: 700; color: rgba(255,255,255,0.6); margin-bottom: 0.5rem; transition: color 0.3s; }
+    .process__step:hover h3 { color: #fff; }
+    .process__step p { font-size: 0.82rem; font-weight: 300; line-height: 1.7; color: rgba(255,255,255,0.3); }
+
+
+    /* ── 10. Gallery ─────────────────────────────────────────── */
+
+    #gallery { padding: var(--pad-y) var(--pad-x); background: var(--off-white); }
+    .gallery__header { display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem; margin-bottom: 2.5rem; }
+    .gallery__header p { max-width: 300px; font-size: 0.88rem; font-weight: 300; line-height: 1.6; color: var(--mid); text-align: right; }
+
+    .gallery__grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      grid-template-rows: 250px 250px;
+      gap: 8px;
+    }
+    .gallery__item:nth-child(1) { grid-column: 1 / 6; }
+    .gallery__item:nth-child(2) { grid-column: 6 / 9; }
+    .gallery__item:nth-child(3) { grid-column: 9 / 13; }
+    .gallery__item:nth-child(4) { grid-column: 1 / 4; }
+    .gallery__item:nth-child(5) { grid-column: 4 / 8; }
+    .gallery__item:nth-child(6) { grid-column: 8 / 13; }
+
+    .gallery__item { position: relative; overflow: hidden; background: #1a1a2e; }
+    .gallery__item img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.5s ease; }
+    .gallery__item:hover img { transform: scale(1.06); }
+    .gallery__item::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(10,10,10,0.75) 0%, transparent 50%);
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .gallery__item:hover::after { opacity: 1; }
+    .gallery__label {
+      position: absolute; bottom: 0; left: 0; right: 0; z-index: 2;
+      padding: 1rem 1.2rem; color: #fff;
+      font-size: 0.78rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+      transform: translateY(100%); transition: transform 0.3s ease;
+    }
+    .gallery__item:hover .gallery__label { transform: translateY(0); }
+
+
+    /* ── 11. Reviews ─────────────────────────────────────────── */
+
+    #reviews { padding: var(--pad-y) var(--pad-x); background: var(--white); }
+    .reviews__header { display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1.5rem; margin-bottom: 3rem; }
+    .review__score { text-align: right; }
+    .review__score-stars { font-size: 1rem; letter-spacing: 2px; color: var(--red); margin-bottom: 0.3rem; }
+    .review__score-number { font-family: 'Syne', sans-serif; font-size: 3.5rem; font-weight: 800; line-height: 1; color: var(--dark); }
+    .review__score-number span { color: var(--red); }
+    .review__score-label { font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--light); }
+
+    .reviews__grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; }
+    .review__card { position: relative; padding: 1.8rem; border: 1px solid var(--border); transition: border-color 0.3s, box-shadow 0.3s; }
+    .review__card:hover { border-color: var(--red); box-shadow: 4px 4px 0 var(--red); }
+    .review__card .review__quote { position: absolute; top: 1.2rem; right: 1.5rem; font-family: 'Syne', sans-serif; font-size: 4rem; font-weight: 800; line-height: 1; color: rgba(227,0,11,0.07); pointer-events: none; }
+    .review__stars { font-size: 0.82rem; letter-spacing: 2px; color: var(--red); margin-bottom: 0.9rem; }
+    .review__text { font-style: italic; font-weight: 300; font-size: 0.96rem; line-height: 1.75; color: var(--mid); margin-bottom: 1.3rem; }
+    .review__author { display: flex; align-items: center; gap: 0.7rem; }
+    .review__avatar { flex-shrink: 0; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; background: var(--red); color: #fff; font-size: 0.72rem; font-weight: 700; }
+    .review__name { font-size: 0.84rem; font-weight: 700; color: var(--dark); }
+    .review__city { margin-top: 1px; font-size: 0.73rem; color: var(--light); }
+
+
+    /* ── 12. Contact & Form ──────────────────────────────────── */
+
+    #contact { padding: var(--pad-y) var(--pad-x); background: var(--off-white); }
+    #contact .section__inner { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; }
+    .contact__info h2 { margin-bottom: 1rem; }
+    .contact__info > p { font-size: 0.96rem; font-weight: 300; line-height: 1.85; color: var(--mid); margin-bottom: 2rem; }
+    .contact__items { display: flex; flex-direction: column; gap: 1rem; }
+    .contact__item { display: flex; align-items: flex-start; gap: 0.9rem; font-size: 0.9rem; color: var(--mid); }
+    .contact__item__icon { flex-shrink: 0; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; background: var(--red); }
+    .contact__item__icon svg { stroke: #fff; fill: none; stroke-width: 1.5; }
+    .contact__item__label { display: block; margin-bottom: 2px; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--light); }
+
+    .contact__form { display: flex; flex-direction: column; gap: 1rem; }
+    .form__row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form__group { display: flex; flex-direction: column; gap: 0.3rem; }
+    .form__group label { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--light); }
+    .form__group input, .form__group textarea, .form__group select {
+      padding: 0.8rem 1rem; background: #fff; border: 1px solid var(--border);
+      color: var(--dark); font-family: 'Lato', sans-serif; font-size: 0.92rem;
+      appearance: none; border-radius: 0; outline: none; transition: border-color 0.2s;
+    }
+    .form__group input:focus, .form__group textarea:focus, .form__group select:focus { border-color: var(--red); }
+    .form__group textarea { resize: vertical; min-height: 110px; }
+    .form__footer { display: flex; align-items: center; flex-wrap: wrap; gap: 1rem; margin-top: 0.3rem; }
+    .form__note { font-size: 0.77rem; color: var(--light); }
+    #form-success {
+      display: none; padding: 0.85rem 1.1rem;
+      border-left: 3px solid var(--red); background: rgba(227,0,11,0.05);
+      color: var(--red); font-size: 0.88rem; font-weight: 700;
+    }
+
+
+    /* ── 13. Footer ──────────────────────────────────────────── */
+
+    footer {
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 1rem; padding: 2.2rem var(--pad-x);
+      background: var(--dark);
+    }
+    .footer__brand { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 800; color: rgba(255,255,255,0.7); }
+    .footer__brand em { color: var(--red); font-style: normal; }
+    .footer__copy { margin-top: 0.3rem; font-size: 0.75rem; color: rgba(255,255,255,0.25); }
+    .footer__badge { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; border: 1px solid rgba(255,255,255,0.1); font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.3); }
+    .footer__badge-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--red); }
+
+
+    /* ── 14. Scroll Reveal ───────────────────────────────────── */
+
+    @keyframes fadeUp { from { opacity:0; transform:translateY(28px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+
+    /* Only hide if JS is active — prevents blank page if JS fails */
+    body.js-ready .reveal {
+      opacity: 0; transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    body.js-ready .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    .delay-1 { transition-delay: 0.08s; }
+    .delay-2 { transition-delay: 0.16s; }
+
+    /* ── Reduced motion — respect user OS preference ────────── */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration:   0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration:  0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+      body.js-ready .reveal { opacity: 1; transform: none; }
+    }
+
+
+    /* ── 15. Responsive ──────────────────────────────────────── */
+
+    @media (max-width: 1100px) {
+      :root { --pad-x: 3rem; --pad-y: 5rem; }
+      nav { padding: 0 2rem; }
+      .hero__left { padding: 4rem 2.5rem 4rem 3rem; }
+      #about .section__inner, #contact .section__inner { gap: 3rem; }
+      .products__grid { grid-template-columns: repeat(2,1fr); }
+      .process__steps { grid-template-columns: repeat(3,1fr); gap: 2rem; }
+      .process__steps::before { display: none; }
+      footer { padding: 2rem 3rem; }
+    }
+
+    @media (max-width: 900px) {
+      nav ul { display: none; }
+      .nav__toggle { display: flex; }
+      #hero { grid-template-columns: 1fr; }
+      .hero__right { display: none; }
+      .hero__left { padding: 4rem 2rem 3rem; }
+      #about .section__inner, #contact .section__inner { grid-template-columns: 1fr; }
+      .gallery__grid { grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
+      .gallery__item { grid-column: auto !important; height: 180px; }
+      .gallery__header p { text-align: left; }
+      .reviews__grid { grid-template-columns: 1fr 1fr; }
+      footer { padding: 1.8rem 2rem; flex-direction: column; text-align: center; }
+    }
+
+    @media (max-width: 600px) {
+      :root { --pad-x: 1.5rem; --pad-y: 3.5rem; }
+      .products__grid { grid-template-columns: 1fr; }
+      .process__steps { grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+      .reviews__grid { grid-template-columns: 1fr; }
+      .reviews__header { flex-direction: column; align-items: flex-start; }
+      .review__score { text-align: left; }
+      .form__row { grid-template-columns: 1fr; }
+      .gallery__grid { grid-template-columns: 1fr; grid-template-rows: auto; }
+      .gallery__item { height: 200px !important; }
+      nav { padding: 0 1.2rem; }
+      .modal__body { padding: 1.5rem; }
+      .modal__img { height: 220px; }
+    }
+
+    /* ── WhatsApp floating button ────────────────────────────── */
+    .wa__float {
+      position: fixed; bottom: 1.8rem; right: 1.8rem; z-index: 200;
+      width: 56px; height: 56px; border-radius: 50%;
+      background: #25d366; display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 20px rgba(37,211,102,0.45);
+      text-decoration: none; transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .wa__float:hover { transform: scale(1.1); box-shadow: 0 6px 28px rgba(37,211,102,0.55); }
+    .wa__float svg { fill: #fff; }
+    .wa__tooltip {
+      position: absolute; right: 68px; padding: 0.45rem 0.9rem;
+      background: var(--dark); color: #fff;
+      font-size: 0.78rem; font-weight: 700; white-space: nowrap; border-radius: 4px;
+      opacity: 0; pointer-events: none; transition: opacity 0.2s;
+    }
+    .wa__float:hover .wa__tooltip { opacity: 1; }
+
+    /* ── Form UX states ──────────────────────────────────────── */
+    .form__group input.error, .form__group textarea.error {
+      border-color: var(--red); background: rgba(227,0,11,0.03);
+    }
+    .form__field-error { font-size: 0.72rem; color: var(--red); margin-top: 0.2rem; display: none; }
+    .form__field-error.show { display: block; }
+    .btn-red:disabled { opacity: 0.65; cursor: not-allowed; transform: none; }
+    .spinner {
+      display: inline-block; width: 14px; height: 14px;
+      border: 2px solid rgba(255,255,255,0.35); border-top-color: #fff;
+      border-radius: 50%; animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    #form-error {
+      display: none; margin-top: 0.5rem; padding: 0.85rem 1.1rem;
+      border-left: 3px solid #c00; background: rgba(200,0,0,0.05);
+      color: #c00; font-size: 0.88rem; font-weight: 700;
+    }
+
+    /* ── Active nav link ─────────────────────────────────────── */
+    nav ul a.nav__active { color: var(--red); }
+  </style>
+</head>
+
+<body>
+
+  <!-- ============================================================
+       MODAL — each product has its own hardcoded panel.
+       No async image loading. Images are directly in HTML.
+       JS just shows/hides the right panel.
+       ============================================================ -->
+  <div id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title-text">
+    <div class="modal__box">
+      <button class="modal__close" id="modal__close-btn" onclick="Modal.close()" aria-label="Chiudi finestra">✕</button>
+      <!-- Screen reader title — updated by JS when modal opens -->
+      <h2 id="modal-title-text" class="sr-only"></h2>
+
+      <!-- Panel 0: Finestre per Tetti a Falda -->
+      <div class="modal__panel" id="panel-0">
+        <img class="modal__img" loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=760&fm=webp&q=60&fit=crop&auto=format" alt="Finestra per tetto a falda" />
+        <div class="modal__body">
+          <div class="tag-pill">La più richiesta</div>
+          <h3>Finestre per Tetti a Falda</h3>
+          <p>Le finestre VELUX per tetti inclinati sono la soluzione più diffusa per mansarde e sottotetti abitabili. Trasformano uno spazio buio in un ambiente luminoso e confortevole.</p>
+          <ul class="check-list">
+            <li>Apertura a bilico, vasistas o proiezione</li>
+            <li>Doppio o triplo vetro con controllo solare</li>
+            <li>Disponibile in legno, poliuretano e alluminio</li>
+            <li>Compatibile con tende oscuranti e filtranti VELUX</li>
+            <li>Conforme alle norme di efficienza energetica</li>
+          </ul>
+          <a href="#contact" class="modal__cta" onclick="Modal.close()">Richiedi Informazioni →</a>
+        </div>
+      </div>
+
+      <!-- Panel 1: Lucernari per Tetti Piani -->
+      <div class="modal__panel" id="panel-1">
+        <img class="modal__img" loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1565538810643-b5bdb714032a?w=760&fm=webp&q=60&fit=crop&auto=format" alt="Lucernario per tetto piano" />
+        <div class="modal__body">
+          <div class="tag-pill">Ideale per spazi interni</div>
+          <h3>Lucernari per Tetti Piani</h3>
+          <p>I lucernari VELUX per tetti piani o a bassa pendenza portano luce zenitale in ambienti senza pareti esterne — cucine, corridoi, bagni e living.</p>
+          <ul class="check-list">
+            <li>Per tetti piani o inclinazione 0°–15°</li>
+            <li>Cupola trasparente o smerigliata</li>
+            <li>Versione fissa o apribile per ventilazione</li>
+            <li>Tenuta all'acqua garantita anche con la neve</li>
+            <li>Ampia gamma di dimensioni standard e su misura</li>
+          </ul>
+          <a href="#contact" class="modal__cta" onclick="Modal.close()">Richiedi Informazioni →</a>
+        </div>
+      </div>
+
+      <!-- Panel 2: Finestre Abbinate -->
+      <div class="modal__panel" id="panel-2">
+        <img class="modal__img" loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=760&fm=webp&q=60&fit=crop&auto=format" alt="Finestre abbinate" />
+        <div class="modal__body">
+          <div class="tag-pill">Per il massimo della luce</div>
+          <h3>Finestre Abbinate</h3>
+          <p>Le finestre abbinate VELUX uniscono due o più finestre verticalmente o orizzontalmente, creando una superficie vetrata ampia e una vista panoramica straordinaria.</p>
+          <ul class="check-list">
+            <li>Combinazioni verticali e orizzontali possibili</li>
+            <li>Massima superficie vetrata e luminosità</li>
+            <li>Design coerente con finitura unica</li>
+            <li>Modelli apribili abbinati a pannelli fissi</li>
+            <li>Ideale per living, camere e studi</li>
+          </ul>
+          <a href="#contact" class="modal__cta" onclick="Modal.close()">Richiedi Informazioni →</a>
+        </div>
+      </div>
+
+      <!-- Panel 3: Finestre Elettriche -->
+      <div class="modal__panel" id="panel-3">
+        <img class="modal__img" loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=760&fm=webp&q=60&fit=crop&auto=format" alt="Finestra elettrica VELUX" />
+        <div class="modal__body">
+          <div class="tag-pill">Smart home ready</div>
+          <h3>Finestre Elettriche</h3>
+          <p>Le finestre elettriche VELUX si aprono e chiudono con telecomando, app o comandi vocali. Il sensore pioggia le chiude automaticamente in caso di maltempo.</p>
+          <ul class="check-list">
+            <li>Telecomando incluso, app VELUX ACTIVE disponibile</li>
+            <li>Sensore pioggia con chiusura automatica</li>
+            <li>Compatibile con Alexa, Google Home, Apple HomeKit</li>
+            <li>Ideale per posizioni difficili da raggiungere</li>
+            <li>Programmabile con scenari luce e ventilazione</li>
+          </ul>
+          <a href="#contact" class="modal__cta" onclick="Modal.close()">Richiedi Informazioni →</a>
+        </div>
+      </div>
+
+      <!-- Panel 4: Accessori e Tende -->
+      <div class="modal__panel" id="panel-4">
+        <img class="modal__img" loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=760&fm=webp&q=60&fit=crop&auto=format" alt="Tende e accessori VELUX" />
+        <div class="modal__body">
+          <div class="tag-pill">Controllo totale della luce</div>
+          <h3>Accessori e Tende VELUX</h3>
+          <p>Le tende VELUX sono progettate su misura per ogni modello di finestra. Dalla oscurante totale alla veneziana, permettono di controllare luce, calore e privacy.</p>
+          <ul class="check-list">
+            <li>Tende oscuranti, filtranti, veneziane e plissé</li>
+            <li>Decine di colori e pattern disponibili</li>
+            <li>Manuali o motorizzate con telecomando</li>
+            <li>Fit perfetto su ogni modello VELUX</li>
+            <li>Bloccano fino al 99% della luce (modello oscurante)</li>
+          </ul>
+          <a href="#contact" class="modal__cta" onclick="Modal.close()">Richiedi Informazioni →</a>
+        </div>
+      </div>
+
+      <!-- Panel 5: Sostituzione e Manutenzione -->
+      <div class="modal__panel" id="panel-5">
+        <img class="modal__img" loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=760&fm=webp&q=60&fit=crop&auto=format" alt="Sostituzione finestra tetto" />
+        <div class="modal__body">
+          <div class="tag-pill">Rinnova il tuo tetto</div>
+          <h3>Sostituzione e Manutenzione</h3>
+          <p>Sostituisco vecchie finestre per tetti, di qualsiasi marca, con nuovi modelli VELUX ad alta efficienza. Riparo anche meccanismi, guarnizioni e vetri rotti.</p>
+          <ul class="check-list">
+            <li>Valutazione gratuita dello stato attuale</li>
+            <li>Compatibile con aperture di qualsiasi marca</li>
+            <li>Collari di adattamento per tutte le taglie</li>
+            <li>Riparazione meccanismi, molle e guarnizioni</li>
+            <li>Sostituzione vetri appannati o rotti</li>
+          </ul>
+          <a href="#contact" class="modal__cta" onclick="Modal.close()">Richiedi Informazioni →</a>
+        </div>
+      </div>
+
+    </div><!-- .modal__box -->
+  </div><!-- #modal-overlay -->
+
+
+  <!-- ============================================================
+       NAVIGATION
+       ============================================================ -->
+  <nav>
+    <a href="#hero" class="nav-logo">
+      <div class="nav__velux-badge"><span>VELUX</span></div>
+      <div class="nav__divider"></div>
+      <div class="nav__name">Luca <em>Martini</em></div>
+    </a>
+    <ul>
+      <li><a href="#about">Chi Sono</a></li>
+      <li><a href="#products">Prodotti</a></li>
+      <li><a href="#process">Come Lavoro</a></li>
+      <li><a href="#gallery">Lavori</a></li>
+      <li><a href="#reviews">Recensioni</a></li>
+      <li class="nav__cta"><a href="#contact">Preventivo Gratuito</a></li>
+    </ul>
+    <button class="nav__toggle" onclick="Nav.toggle()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <div class="mobile-nav" id="mobileNav">
+    <a href="#about"    onclick="Nav.close()">Chi Sono</a>
+    <a href="#products" onclick="Nav.close()">Prodotti</a>
+    <a href="#process"  onclick="Nav.close()">Come Lavoro</a>
+    <a href="#gallery"  onclick="Nav.close()">I Miei Lavori</a>
+    <a href="#reviews"  onclick="Nav.close()">Recensioni</a>
+    <a href="#contact"  onclick="Nav.close()">Preventivo Gratuito</a>
+  </div>
+
+
+  <!-- ============================================================
+       HERO
+       ============================================================ -->
+  <section id="hero">
+    <div class="hero__left">
+      <div class="eyebrow">Installatore Certificato VELUX VIP</div>
+      <h1>Più luce.<br><span>Meno pensieri.</span><br>Qualità vera.</h1>
+      <p>Installazione professionale di finestre per tetti e lucernari VELUX in tutta la Lombardia. Sopralluogo e preventivo sempre gratuiti.</p>
+      <div class="hero__cta">
+        <a href="#contact"  class="btn-red">Richiedi Preventivo</a>
+        <a href="#products" class="btn-outline">Scopri i Prodotti</a>
+      </div>
+    </div>
+    <div class="hero__right">
+      <div class="hero__pattern"></div>
+      <div class="hero__visual">
+        <svg width="260" height="260" viewBox="0 0 280 280" fill="none" style="filter:drop-shadow(0 16px 48px rgba(227,0,11,0.25))" aria-hidden="true">
+          <path d="M30 260 L30 120 L140 30 L250 120 L250 260 Z" stroke="rgba(255,255,255,0.1)" stroke-width="1.5"/>
+          <path d="M20 125 L140 22 L260 125" stroke="rgba(255,255,255,0.18)" stroke-width="2"/>
+          <rect x="80" y="58" width="120" height="92" rx="2" fill="rgba(227,0,11,0.12)" stroke="#E3000B" stroke-width="2"/>
+          <line x1="140" y1="58"  x2="140" y2="150" stroke="#E3000B" stroke-width="1.5" opacity="0.6"/>
+          <line x1="80"  y1="104" x2="200" y2="104" stroke="#E3000B" stroke-width="1.5" opacity="0.6"/>
+          <line x1="140" y1="153" x2="105" y2="258" stroke="rgba(227,0,11,0.12)" stroke-width="1.2"/>
+          <line x1="140" y1="153" x2="140" y2="258" stroke="rgba(227,0,11,0.18)" stroke-width="1.5"/>
+          <line x1="140" y1="153" x2="175" y2="258" stroke="rgba(227,0,11,0.12)" stroke-width="1.2"/>
+          <circle cx="202" cy="48"  r="3"   fill="#E3000B" opacity="0.5"/>
+          <circle cx="216" cy="36"  r="2"   fill="#E3000B" opacity="0.35"/>
+          <circle cx="228" cy="52"  r="1.5" fill="#E3000B" opacity="0.25"/>
+          <rect x="30"  y="180" width="220" height="80" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+          <rect x="95"  y="200" width="38"  height="58" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+          <rect x="147" y="200" width="38"  height="58" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+        </svg>
+        <div class="hero__stat-pill">
+          <strong>10+</strong>
+          <span>Installazioni nel primo anno</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       ABOUT
+       ============================================================ -->
+  <section id="about">
+    <div class="section__inner">
+      <div class="about__card reveal">
+        <div class="tag-pill">Chi sono</div>
+        <h3>Luca Martini</h3>
+        <p class="about__card__subtitle">Installatore Certificato VELUX VIP · Lombardia</p>
+        <ul class="check-list">
+          <li>Certificazione ufficiale VELUX VIP 2024</li>
+          <li>Formazione tecnica avanzata su tutti i prodotti VELUX</li>
+          <li>Sopralluogo e preventivo sempre gratuiti</li>
+          <li>Garanzia estesa su ogni installazione</li>
+          <li>Risposta garantita entro 24 ore</li>
+        </ul>
+        <div class="about__card__stats">
+          <div class="about__card__stat"><strong>10+</strong><span>Installazioni anno 1</span></div>
+          <div class="about__card__stat"><strong>100%</strong><span>Clienti soddisfatti</span></div>
+          <div class="about__card__stat"><strong>24h</strong><span>Risposta max</span></div>
+        </div>
+      </div>
+      <div class="about__text reveal delay-1">
+        <div class="eyebrow">La mia storia</div>
+        <h2 class="section-title">Giovane, <span>motivato</span> e già operativo.</h2>
+        <p>Sono Luca Martini, installatore certificato VELUX VIP. Ho scelto questo percorso per la mia passione per l'edilizia di qualità e per le soluzioni che migliorano davvero la vita delle persone portando luce naturale nelle abitazioni.</p>
+        <p>Nonostante sia all'inizio della mia carriera, ho già completato oltre 10 installazioni nel mio primo anno — ogni lavoro affrontato con la stessa cura, precisione e professionalità che mi ha insegnato il percorso VELUX.</p>
+        <p>La certificazione VIP è un impegno concreto verso la qualità e la soddisfazione del cliente. Scegliermi significa avere un professionista motivato che tratta ogni casa come se fosse la propria.</p>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       PRODUCTS
+       onclick="Modal.open(N)" — N matches panel-N in the modal
+       ============================================================ -->
+  <section id="products">
+    <div class="products__header reveal">
+      <div class="eyebrow">I Prodotti VELUX</div>
+      <h2 class="section-title">Soluzioni per <span>ogni tetto.</span></h2>
+      <p>Clicca su un prodotto per vedere immagini di riferimento e scoprire tutti i dettagli.</p>
+    </div>
+    <div class="products__grid reveal delay-1">
+
+      <div class="product__card" tabindex="0" onclick="Modal.open(0)" onkeydown="if(event.key==='Enter')Modal.open(0)">
+        <div class="product__icon"><svg width="26" height="26" viewBox="0 0 28 28"><rect x="3" y="8" width="22" height="17" rx="1"/><path d="M3 8 L14 2 L25 8"/><line x1="14" y1="8" x2="14" y2="25"/><line x1="3" y1="16" x2="25" y2="16"/></svg></div>
+        <h3>Finestre per Tetti a Falda</h3>
+        <p>Apertura a bilico, vasistas o proiezione. Doppio o triplo vetro con controllo solare. Ideali per mansarde e sottotetti abitabili.</p>
+        <div class="product__more">Vedi immagini</div>
+      </div>
+
+      <div class="product__card" tabindex="0" onclick="Modal.open(1)" onkeydown="if(event.key==='Enter')Modal.open(1)">
+        <div class="product__icon"><svg width="26" height="26" viewBox="0 0 28 28"><rect x="3" y="6" width="22" height="16" rx="1"/><line x1="14" y1="6" x2="14" y2="22"/><line x1="3" y1="14" x2="25" y2="14"/><rect x="6" y="22" width="16" height="4"/></svg></div>
+        <h3>Lucernari per Tetti Piani</h3>
+        <p>Luce zenitale per cucine, bagni e ambienti interni. Fissi o apribili per ventilazione. Per tetti piani o a bassa pendenza.</p>
+        <div class="product__more">Vedi immagini</div>
+      </div>
+
+      <div class="product__card" tabindex="0" onclick="Modal.open(2)" onkeydown="if(event.key==='Enter')Modal.open(2)">
+        <div class="product__icon"><svg width="26" height="26" viewBox="0 0 28 28"><rect x="2" y="7" width="11" height="14" rx="1"/><rect x="15" y="7" width="11" height="14" rx="1"/><path d="M2 7 L7.5 2 L13 7"/><path d="M15 7 L20.5 2 L26 7"/></svg></div>
+        <h3>Finestre Abbinate</h3>
+        <p>Due o più finestre unite per una superficie vetrata ampia e scenografica. Vista panoramica e luce al massimo.</p>
+        <div class="product__more">Vedi immagini</div>
+      </div>
+
+      <div class="product__card" tabindex="0" onclick="Modal.open(3)" onkeydown="if(event.key==='Enter')Modal.open(3)">
+        <div class="product__icon"><svg width="26" height="26" viewBox="0 0 28 28"><rect x="3" y="5" width="22" height="18" rx="1"/><path d="M3 5 L14 0 L25 5"/><rect x="8" y="10" width="12" height="8" rx="1"/><circle cx="14" cy="14" r="2"/></svg></div>
+        <h3>Finestre Elettriche</h3>
+        <p>Motorizzate con telecomando o app VELUX ACTIVE. Chiusura automatica in caso di pioggia. Compatibili con smart home.</p>
+        <div class="product__more">Vedi immagini</div>
+      </div>
+
+      <div class="product__card" tabindex="0" onclick="Modal.open(4)" onkeydown="if(event.key==='Enter')Modal.open(4)">
+        <div class="product__icon"><svg width="26" height="26" viewBox="0 0 28 28"><rect x="3" y="8" width="22" height="16" rx="1"/><path d="M3 8 L14 2 L25 8"/><rect x="7" y="12" width="6" height="6"/><rect x="15" y="12" width="6" height="6"/></svg></div>
+        <h3>Accessori e Tende</h3>
+        <p>Tende oscuranti, filtranti e veneziane VELUX. Decine di colori. Manuali o motorizzate, su misura per ogni finestra.</p>
+        <div class="product__more">Vedi immagini</div>
+      </div>
+
+      <div class="product__card" tabindex="0" onclick="Modal.open(5)" onkeydown="if(event.key==='Enter')Modal.open(5)">
+        <div class="product__icon"><svg width="26" height="26" viewBox="0 0 28 28"><rect x="3" y="8" width="22" height="16" rx="1"/><path d="M3 8 L14 2 L25 8"/><path d="M8 20 L14 10 L20 20"/><line x1="10" y1="17" x2="18" y2="17"/></svg></div>
+        <h3>Sostituzione e Manutenzione</h3>
+        <p>Sostituisco vecchie finestre con nuovi modelli VELUX più efficienti. Riparazione meccanismi, guarnizioni e vetri. Valutazione gratuita.</p>
+        <div class="product__more">Vedi immagini</div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       PROCESS
+       ============================================================ -->
+  <section id="process">
+    <div class="reveal">
+      <div class="eyebrow">Come Lavoro</div>
+      <h2 class="section-title">Il processo in <span>5 passi.</span></h2>
+    </div>
+    <div class="process__steps reveal delay-1">
+      <div class="process__step"><div class="process__step-number">01</div><h3>Sopralluogo Gratuito</h3><p>Vengo a valutare tetto, misure ed esigenze. Nessun costo, nessun impegno.</p></div>
+      <div class="process__step"><div class="process__step-number">02</div><h3>Preventivo Chiaro</h3><p>Prodotti, tempi e costi definiti. Niente sorprese: quello che leggi è quello che paghi.</p></div>
+      <div class="process__step"><div class="process__step-number">03</div><h3>Scelta Prodotto</h3><p>Ti guido nel modello giusto per il tuo tetto, budget e preferenze estetiche.</p></div>
+      <div class="process__step"><div class="process__step-number">04</div><h3>Installazione</h3><p>Lavoro preciso secondo le specifiche VELUX. Pulito, veloce, senza danni ai tuoi spazi.</p></div>
+      <div class="process__step"><div class="process__step-number">05</div><h3>Garanzia e Supporto</h3><p>Documentazione completa e garanzia estesa. Disponibile per ogni domanda post-installazione.</p></div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       GALLERY
+       Images are real <img> tags with Unsplash URLs.
+       Replace src values with real job photos when available.
+       For real photos: convert to WebP at <200kb.
+       Free tool: squoosh.app (drag and drop, browser-based).
+       ============================================================ -->
+  <section id="gallery">
+    <div class="gallery__header reveal">
+      <div>
+        <div class="eyebrow">I Miei Lavori</div>
+        <h2 class="section-title">Installazioni <span>recenti.</span></h2>
+      </div>
+      <p>Una selezione dei lavori completati nel mio primo anno di attività in Lombardia.</p>
+    </div>
+    <div class="gallery__grid reveal delay-1">
+
+      <div class="gallery__item">
+        <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=800&fm=webp&q=60&fit=crop&auto=format" alt="Finestra singola Milano" />
+        <div class="gallery__label">Finestra singola – Milano</div>
+      </div>
+
+      <div class="gallery__item">
+        <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&fm=webp&q=60&fit=crop&auto=format" alt="Doppia abbinata Torino" />
+        <div class="gallery__label">Doppia abbinata – Torino</div>
+      </div>
+
+      <div class="gallery__item">
+        <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1565538810643-b5bdb714032a?w=800&fm=webp&q=60&fit=crop&auto=format" alt="Lucernario Bergamo" />
+        <div class="gallery__label">Lucernario – Bergamo</div>
+      </div>
+
+      <div class="gallery__item">
+        <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800&fm=webp&q=60&fit=crop&auto=format" alt="Mansarda Monza" />
+        <div class="gallery__label">Mansarda – Monza</div>
+      </div>
+
+      <div class="gallery__item">
+        <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=800&fm=webp&q=60&fit=crop&auto=format" alt="Lucernario Como" />
+        <div class="gallery__label">Lucernario – Como</div>
+      </div>
+
+      <div class="gallery__item">
+        <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1505843513577-22bb7d21e455?w=800&fm=webp&q=60&fit=crop&auto=format" alt="Tripla finestra Varese" />
+        <div class="gallery__label">Tripla finestra – Varese</div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       REVIEWS
+       ============================================================ -->
+  <section id="reviews">
+    <div class="reviews__header reveal">
+      <div>
+        <div class="eyebrow">Recensioni</div>
+        <h2 class="section-title">Cosa dicono <span>i miei clienti.</span></h2>
+      </div>
+      <div class="review__score">
+        <div class="review__score-stars">★★★★★</div>
+        <div class="review__score-number">5<span>.0</span></div>
+        <div class="review__score-label">Media recensioni</div>
+      </div>
+    </div>
+    <div class="reviews__grid reveal delay-1" id="reviewsGrid"></div>
+  </section>
+
+
+  <!-- ============================================================
+       CONTACT
+       ============================================================ -->
+  <section id="contact">
+    <div class="section__inner">
+      <div class="contact__info reveal">
+        <div class="eyebrow">Contattami</div>
+        <h2 class="section-title">Parliamo del<br><span>tuo progetto.</span></h2>
+        <p>Sopralluogo gratuito e preventivo senza impegno. Scrivimi o chiamami — rispondo entro 24 ore.</p>
+        <div class="contact__items">
+          <div class="contact__item">
+            <div class="contact__item__icon"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 11 19.79 19.79 0 01.01 2.18 2 2 0 012 .18h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg></div>
+            <div><span class="contact__item__label">Telefono / WhatsApp</span>+39 333 456 7890</div>
+          </div>
+          <div class="contact__item">
+            <div class="contact__item__icon"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+            <div><span class="contact__item__label">Email</span><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="452c2b232a0529302624282437312c2b2c68332029303d6b2c31">[email&#160;protected]</a></div>
+          </div>
+          <div class="contact__item">
+            <div class="contact__item__icon"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+            <div><span class="contact__item__label">Zona di Intervento</span>Lombardia e Province Limitrofe</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="reveal delay-1">
+        <form class="contact__form" id="contactForm">
+          <div class="form__row">
+            <div class="form__group"><label>Nome *</label><input type="text" placeholder="Mario" required /></div>
+            <div class="form__group"><label>Cognome *</label><input type="text" placeholder="Rossi" required /></div>
+          </div>
+          <div class="form__group"><label>Email *</label><input type="email" placeholder="mario@esempio.it" required /></div>
+          <div class="form__group"><label>Telefono</label><input type="tel" placeholder="+39 xxx xxx xxxx" /></div>
+          <div class="form__group">
+            <label>Tipo di Intervento</label>
+            <select>
+              <option value="">Seleziona…</option>
+              <option>Nuova finestra per tetto</option>
+              <option>Lucernario per tetto piano</option>
+              <option>Finestre abbinate</option>
+              <option>Finestra elettrica / smart</option>
+              <option>Sostituzione finestra esistente</option>
+              <option>Manutenzione e riparazione</option>
+              <option>Accessori e tende</option>
+              <option>Non so ancora – vorrei una consulenza</option>
+            </select>
+          </div>
+          <div class="form__group"><label>Messaggio *</label><textarea placeholder="Descrivi il tuo progetto o le tue esigenze…" required></textarea></div>
+          <div class="form__footer">
+            <button type="submit" class="btn-red">Invia Messaggio</button>
+            <span class="form__note">Risposta entro 24 ore</span>
+          </div>
+          <div id="form-error"></div>
+          <div id="form-success">✓ Messaggio inviato! Ti risponderò al più presto.</div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       FOOTER
+       ============================================================ -->
+  <footer>
+    <div>
+      <div class="footer__brand">Luca <em>Martini</em></div>
+      <p class="footer__copy">© 2024 · Installatore Certificato VELUX VIP · P.IVA 00000000000</p>
+    </div>
+    <div class="footer__badge">
+      <div class="footer__badge-dot"></div>
+      Partner Ufficiale VELUX VIP
+    </div>
+  </footer>
+
+
+  <!-- ============================================================
+       JAVASCRIPT
+       ============================================================
+       Modal  — show/hide product detail panels
+       Nav    — mobile nav open/close
+       Reveal — scroll-triggered fade-in with fallback
+       Form   — contact form submit handler
+       ============================================================ -->
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+
+    // Mark JS as active so reveal animations engage
+    document.body.classList.add('js-ready');
+
+
+    /* ── Modal ────────────────────────────────────────────────
+       Each product card maps to a panel-N div in the modal.
+       Modal.open(N) hides all panels, shows panel-N, then
+       makes the overlay visible. No async, no image loading.
+       ──────────────────────────────────────────────────────── */
+    const Modal = {
+      overlay:     document.getElementById('modal-overlay'),
+      srTitle:     document.getElementById('modal-title-text'),
+      closeBtn:    document.getElementById('modal__close-btn'),
+      lastFocused: null, // restore focus here when modal closes
+
+      open(index) {
+        // Remember what triggered the open so we can return focus on close
+        this.lastFocused = document.activeElement;
+
+        // Show the right panel
+        document.querySelectorAll('.modal__panel').forEach(p => p.classList.remove('active'));
+        const panel = document.getElementById('panel-' + index);
+        panel.classList.add('active');
+
+        // Update the sr-only label so screen readers announce the right title
+        const panelTitle = panel.querySelector('h3');
+        if (panelTitle && this.srTitle) {
+          this.srTitle.textContent = panelTitle.textContent;
+        }
+
+        // Show overlay and lock scroll
+        this.overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+
+        // Move focus into modal for keyboard/screen reader users
+        if (this.closeBtn) this.closeBtn.focus();
+      },
+
+      close() {
+        this.overlay.classList.remove('active');
+        document.body.style.overflow = '';
+
+        // Return focus to the element that opened the modal
+        if (this.lastFocused) this.lastFocused.focus();
+      },
+
+      // Keep Tab key cycling inside the modal — never escape to page behind
+      trapFocus(e) {
+        if (!this.overlay.classList.contains('active')) return;
+        if (e.key !== 'Tab') return;
+
+        const focusable = Array.from(
+          this.overlay.querySelectorAll(
+            'button:not([disabled]), [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+          )
+        );
+        if (!focusable.length) return;
+
+        const first = focusable[0];
+        const last  = focusable[focusable.length - 1];
+
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      },
+    };
+
+    // Close on backdrop click
+    Modal.overlay.addEventListener('click', function(e) {
+      if (e.target === this) Modal.close();
+    });
+
+    // ESC closes modal; Tab stays trapped inside
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') Modal.close();
+      Modal.trapFocus(e);
+    });
+
+
+    /* ── Nav ──────────────────────────────────────────────────
+       Mobile dropdown open/close.
+       ──────────────────────────────────────────────────────── */
+    const Nav = {
+      el: document.getElementById('mobileNav'),
+      toggle() { this.el.classList.toggle('open'); },
+      close()  { this.el.classList.remove('open'); },
+    };
+
+
+    /* ── Reveal ───────────────────────────────────────────────
+       Fade-in on scroll via IntersectionObserver.
+       Hard 800ms fallback ensures nothing stays hidden.
+       ──────────────────────────────────────────────────────── */
+    const Reveal = {
+      els: Array.from(document.querySelectorAll('.reveal')),
+
+      showAll() {
+        this.els.forEach(el => el.classList.add('visible'));
+      },
+
+      init() {
+        // Fallback: force everything visible after 800ms
+        const fallback = setTimeout(() => this.showAll(), 800);
+
+        if (!('IntersectionObserver' in window)) {
+          clearTimeout(fallback);
+          this.showAll();
+          return;
+        }
+
+        let count = 0;
+        const observer = new IntersectionObserver(entries => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              setTimeout(() => entry.target.classList.add('visible'), count * 60);
+              count++;
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0 });
+
+        this.els.forEach(el => observer.observe(el));
+      },
+    };
+
+    Reveal.init();
+
+
+    /* ══════════════════════════════════════════════════════════
+       REVIEWS DATA
+       ══════════════════════════════════════════════════════════
+       Add/edit/remove reviews by editing this array only.
+       Fields: stars (1-5), text, name, city
+       ══════════════════════════════════════════════════════════ */
+    const REVIEWS = [
+      { stars: 5, text: 'Luca è venuto a fare il sopralluogo lo stesso giorno. Lavoro preciso, pulito e veloce. La finestra funziona perfettamente.', name: 'Giulia Romano', city: 'Milano' },
+      { stars: 5, text: 'Giovane ma molto professionale. Mi ha spiegato tutto passo per passo e il preventivo era esattamente quello concordato.', name: 'Luca Bianchi', city: 'Torino' },
+      { stars: 5, text: 'Ha installato due finestre abbinate nella nostra mansarda. Risultato spettacolare — la stanza è completamente trasformata!', name: 'Sara Manzoni', city: 'Bergamo' },
+      { stars: 5, text: 'Ottima comunicazione, puntualità e qualità del lavoro. Ha rispettato ogni dettaglio e lasciato tutto in ordine.', name: 'Antonio Ferrara', city: 'Monza' },
+      { stars: 5, text: 'Avevo paura per il tipo di tetto, ma Luca ha risolto tutto in mezza giornata. Professionale e molto tranquillo.', name: 'Marco Colombo', city: 'Como' },
+      { stars: 5, text: 'Installazione impeccabile e prezzi onesti. Finalmente qualcuno che non gonfia i preventivi. Lo consiglio a tutti!', name: 'Paola Esposito', city: 'Varese' },
+    ];
+
+    const Reviews = {
+      init() {
+        const grid = document.getElementById('reviewsGrid');
+        if (!grid) return;
+        grid.innerHTML = REVIEWS.map(r => {
+          const initials = r.name.split(' ').map(w => w[0]).join('').slice(0, 2);
+          const stars    = '★'.repeat(r.stars) + '☆'.repeat(5 - r.stars);
+          return `<div class="review__card">
+            <div class="review__quote">"</div>
+            <div class="review__stars">${stars}</div>
+            <p class="review__text">${r.text}</p>
+            <div class="review__author">
+              <div class="review__avatar">${initials}</div>
+              <div><div class="review__name">${r.name}</div><div class="review__city">${r.city}</div></div>
+            </div>
+          </div>`;
+        }).join('');
+      },
+    };
+
+    Reviews.init();
+
+
+    /* ── Form ─────────────────────────────────────────────────
+       Formspree integration.
+       HOW TO ACTIVATE:
+         1. Go to https://formspree.io — sign up free
+         2. Create a new form, pick the email to receive messages
+         3. Copy the ID from the URL (e.g. xpwzgkqr)
+         4. Replace 'YOUR_FORM_ID' below with your real ID
+       ──────────────────────────────────────────────────────── */
+    const FORMSPREE_ID = 'YOUR_FORM_ID'; // ← paste your Formspree ID here
+
+    const Form = {
+      el:         document.getElementById('contactForm'),
+      submitBtn:  document.querySelector('#contactForm .btn-red'),
+      successMsg: document.getElementById('form-success'),
+      errorMsg:   document.getElementById('form-error'),
+
+      init() {
+        this.el.addEventListener('submit', e => this.handleSubmit(e));
+        this.el.querySelectorAll('input, textarea').forEach(field => {
+          field.addEventListener('input', () => this.clearError(field));
+        });
+      },
+
+      validate() {
+        let valid = true;
+        this.el.querySelectorAll('[required]').forEach(field => {
+          if (!field.value.trim()) {
+            this.showError(field, 'Questo campo è obbligatorio');
+            valid = false;
+          } else if (field.type === 'email' && !field.value.includes('@')) {
+            this.showError(field, "Inserisci un'email valida");
+            valid = false;
+          }
+        });
+        return valid;
+      },
+
+      showError(field, msg) {
+        field.classList.add('error');
+        let el = field.parentNode.querySelector('.form__field-error');
+        if (!el) {
+          el = document.createElement('span');
+          el.className = 'form__field-error';
+          field.parentNode.appendChild(el);
+        }
+        el.textContent = msg;
+        el.classList.add('show');
+      },
+
+      clearError(field) {
+        field.classList.remove('error');
+        const el = field.parentNode.querySelector('.form__field-error');
+        if (el) el.classList.remove('show');
+      },
+
+      setLoading(on) {
+        this.submitBtn.disabled = on;
+        this.submitBtn.innerHTML = on
+          ? '<span class="spinner"></span> Invio in corso…'
+          : 'Invia Messaggio';
+      },
+
+      async handleSubmit(e) {
+        e.preventDefault();
+        this.successMsg.style.display = 'none';
+        this.errorMsg.style.display   = 'none';
+        if (!this.validate()) return;
+
+        // Demo mode — works without a real Formspree ID
+        if (FORMSPREE_ID === 'YOUR_FORM_ID') {
+          this.el.querySelectorAll('input, textarea, select').forEach(f => f.value = '');
+          this.successMsg.style.display = 'block';
+          setTimeout(() => { this.successMsg.style.display = 'none'; }, 5000);
+          return;
+        }
+
+        // Live submission
+        this.setLoading(true);
+        try {
+          const res = await fetch('https://formspree.io/f/' + FORMSPREE_ID, {
+            method:  'POST',
+            headers: { 'Accept': 'application/json' },
+            body:    new FormData(this.el),
+          });
+          if (res.ok) {
+            this.el.querySelectorAll('input, textarea, select').forEach(f => f.value = '');
+            this.successMsg.style.display = 'block';
+            setTimeout(() => { this.successMsg.style.display = 'none'; }, 6000);
+          } else {
+            this.errorMsg.style.display = 'block';
+          }
+        } catch {
+          this.errorMsg.style.display = 'block';
+        } finally {
+          this.setLoading(false);
+        }
+      },
+    };
+
+    Form.init();
+
+
+    /* ── Active nav highlight on scroll ──────────────────────── */
+    const NavHighlight = {
+      links:    Array.from(document.querySelectorAll('nav ul a[href^="#"]')),
+      sections: Array.from(document.querySelectorAll('section[id]')),
+
+      update() {
+        const scrollY = window.scrollY + 100;
+        let current = '';
+        this.sections.forEach(s => { if (s.offsetTop <= scrollY) current = s.id; });
+        this.links.forEach(a => {
+          a.classList.toggle('nav__active', a.getAttribute('href') === '#' + current);
+        });
+      },
+
+      init() {
+        window.addEventListener('scroll', () => this.update(), { passive: true });
+        this.update();
+      },
+    };
+
+    NavHighlight.init();
+
+  </script>
+
+</body>
+</html>
