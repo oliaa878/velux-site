@@ -1434,7 +1434,15 @@
          3. Copy the ID from the URL (e.g. xpwzgkqr)
          4. Replace 'YOUR_FORM_ID' below with your real ID
        ──────────────────────────────────────────────────────── */
+    // ── Formspree — sends email notification to your friend
     const FORMSPREE_ID = 'xqeydvgl'; // ← paste your Formspree ID here
+
+    // ── Supabase — saves every submission to the database
+    // HOW TO FILL THESE IN:
+    //   Search "YOUR_SUPABASE_URL" → replace with your Project URL
+    //   Search "YOUR_SUPABASE_KEY" → replace with your Publishable key
+    const SUPABASE_URL = 'https://vtqclhbrizdhjcwbpdhw.supabase.co'; // ← Project URL here
+    const SUPABASE_KEY = 'YOUR_SUPABASE_KEY'; // ← Publishable key here
 
     const Form = {
       el:         document.getElementById('contactForm'),
@@ -1511,6 +1519,28 @@
             body:    new FormData(this.el),
           });
           if (res.ok) {
+            // Also save to Supabase database if credentials are set
+            if (SUPABASE_URL !== 'YOUR_SUPABASE_URL') {
+              const data = {
+                nome:      document.getElementById('nome').value,
+                cognome:   document.getElementById('cognome').value,
+                email:     document.getElementById('email').value,
+                telefono:  document.getElementById('telefono').value,
+                servizio:  document.getElementById('servizio').value,
+                messaggio: document.getElementById('messaggio').value,
+              };
+              // Fire and forget — don't block success message
+              fetch(SUPABASE_URL + '/rest/v1/Submissions', {
+                method:  'POST',
+                headers: {
+                  'Content-Type':  'application/json',
+                  'apikey':        SUPABASE_KEY,
+                  'Authorization': 'Bearer ' + SUPABASE_KEY,
+                  'Prefer':        'return=minimal',
+                },
+                body: JSON.stringify(data),
+              }).catch(() => {}); // silent fail — email still sent
+            }
             this.el.querySelectorAll('input, textarea, select').forEach(f => f.value = '');
             this.successMsg.style.display = 'block';
             setTimeout(() => { this.successMsg.style.display = 'none'; }, 6000);
@@ -1653,4 +1683,4 @@
   </script>
 
 </body>
-              </html>
+</html>
