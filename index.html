@@ -1435,14 +1435,14 @@
          4. Replace 'YOUR_FORM_ID' below with your real ID
        ──────────────────────────────────────────────────────── */
     // ── Formspree — sends email notification to your friend
-    const FORMSPREE_ID = 'xqeydvgl'; // ← paste your Formspree ID here
+    const FORMSPREE_ID = 'xqeydvgl';
 
     // ── Supabase — saves every submission to the database
     // HOW TO FILL THESE IN:
     //   Search "YOUR_SUPABASE_URL" → replace with your Project URL
     //   Search "YOUR_SUPABASE_KEY" → replace with your Publishable key
-    const SUPABASE_URL = 'https://vtqclhbrizdhjcwbpdhw.supabase.co'; // ← Project URL here
-    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ0cWNsaGJyaXpkaGpjd2JwZGh3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2MTE0ODMsImV4cCI6MjA4OTE4NzQ4M30.m4GgV0lPrF85zxjrAG4XbM2sObrpcv9LYD7Z02Jzo40'; // ← Publishable key here
+    const SUPABASE_URL = 'https://vtqclhbrizdhjcwbpdhw.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ0cWNsaGJyaXpkaGpjd2JwZGh3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2MTE0ODMsImV4cCI6MjA4OTE4NzQ4M30.m4GgV0lPrF85zxjrAG4XbM2sObrpcv9LYD7Z02Jzo40';
 
     const Form = {
       el:         document.getElementById('contactForm'),
@@ -1530,7 +1530,7 @@
                 messaggio: document.getElementById('messaggio').value,
               };
               // Fire and forget — don't block success message
-              fetch(SUPABASE_URL + '/rest/v1/submissions', {
+              fetch(SUPABASE_URL + '/rest/v1/Submissions', {
                 method:  'POST',
                 headers: {
                   'Content-Type':  'application/json',
@@ -1683,4 +1683,4 @@
   </script>
 
 </body>
-              </html>
+</html>
