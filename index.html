@@ -57,6 +57,9 @@
   <meta name="twitter:description" content="Installazione professionale di finestre per tetti e lucernari VELUX in Lombardia." />
   <meta name="twitter:image"       content="https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=1200&fm=webp&q=65&fit=crop&auto=format" />
   <!-- Preconnect to font origins so DNS+TCP is ready before CSS requests -->
+  <!-- Supabase JS client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
@@ -1438,11 +1441,9 @@
     const FORMSPREE_ID = 'xqeydvgl';
 
     // ── Supabase — saves every submission to the database
-    // HOW TO FILL THESE IN:
-    //   Search "YOUR_SUPABASE_URL" → replace with your Project URL
-    //   Search "YOUR_SUPABASE_KEY" → replace with your Publishable key
     const SUPABASE_URL = 'https://vtqclhbrizdhjcwbpdhw.supabase.co';
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ0cWNsaGJyaXpkaGpjd2JwZGh3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2MTE0ODMsImV4cCI6MjA4OTE4NzQ4M30.m4GgV0lPrF85zxjrAG4XbM2sObrpcv9LYD7Z02Jzo40';
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     const Form = {
       el:         document.getElementById('contactForm'),
@@ -1529,22 +1530,14 @@
                 servizio:  document.getElementById('servizio').value,
                 messaggio: document.getElementById('messaggio').value,
               };
-              // Save to Supabase — log any errors to console
-              fetch(SUPABASE_URL + '/rest/v1/Submissions', {
-                method:  'POST',
-                headers: {
-                  'Content-Type':  'application/json',
-                  'apikey':        SUPABASE_KEY,
-                  'Authorization': 'Bearer ' + SUPABASE_KEY,
-                  'Prefer':        'return=representation',
-                },
-                body: JSON.stringify(data),
-              })
-              .then(r => r.json().then(j => {
-                if (!r.ok) console.error('Supabase error:', r.status, j);
-                else console.log('Supabase saved:', j);
-              }))
-              .catch(err => console.error('Supabase fetch failed:', err));
+              // Save to Supabase using official JS client
+              supabaseClient
+                .from('submissions')
+                .insert([data])
+                .then(({ error }) => {
+                  if (error) console.error('Supabase error:', error.message);
+                  else console.log('Supabase: row saved successfully');
+                });
             }
             this.el.querySelectorAll('input, textarea, select').forEach(f => f.value = '');
             this.successMsg.style.display = 'block';
