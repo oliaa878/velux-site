@@ -1529,17 +1529,22 @@
                 servizio:  document.getElementById('servizio').value,
                 messaggio: document.getElementById('messaggio').value,
               };
-              // Fire and forget — don't block success message
+              // Save to Supabase — log any errors to console
               fetch(SUPABASE_URL + '/rest/v1/Submissions', {
                 method:  'POST',
                 headers: {
                   'Content-Type':  'application/json',
                   'apikey':        SUPABASE_KEY,
                   'Authorization': 'Bearer ' + SUPABASE_KEY,
-                  'Prefer':        'return=minimal',
+                  'Prefer':        'return=representation',
                 },
                 body: JSON.stringify(data),
-              }).catch(() => {}); // silent fail — email still sent
+              })
+              .then(r => r.json().then(j => {
+                if (!r.ok) console.error('Supabase error:', r.status, j);
+                else console.log('Supabase saved:', j);
+              }))
+              .catch(err => console.error('Supabase fetch failed:', err));
             }
             this.el.querySelectorAll('input, textarea, select').forEach(f => f.value = '');
             this.successMsg.style.display = 'block';
@@ -1683,4 +1688,4 @@
   </script>
 
 </body>
-</html>
+  </html>
