@@ -300,6 +300,65 @@
     }
     .modal__close:hover { background: var(--red); }
 
+    /* ── Image lightbox ──────────────────────────────────────────
+       Clicking a modal image opens it fullscreen.
+       Completely isolated from all other styles.               */
+    .modal__img {
+      cursor: zoom-in;
+      transition: opacity 0.2s;
+    }
+    .modal__img:hover { opacity: 0.92; }
+
+    #lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: rgba(0, 0, 0, 0.95);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+      cursor: zoom-out;
+    }
+    #lightbox.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+    #lightbox img {
+      max-width: 100%;
+      max-height: 90vh;
+      object-fit: contain;
+      border: none;
+      display: block;
+      transform: scale(0.95);
+      transition: transform 0.3s ease;
+    }
+    #lightbox.active img {
+      transform: scale(1);
+    }
+    #lightbox-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      width: 40px;
+      height: 40px;
+      background: rgba(255,255,255,0.15);
+      border: none;
+      border-radius: 50%;
+      color: #fff;
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+    #lightbox-close:hover { background: var(--red); }
+
+
     /* Hidden modal panels — only active one is shown */
     .modal__panel { display: none; }
     .modal__panel.active { display: block; }
@@ -782,6 +841,12 @@
   <a href="#main-content" class="skip-link">Vai al contenuto principale</a>
 
 
+
+  <!-- Image lightbox — opened when user clicks a modal product image -->
+  <div id="lightbox" role="dialog" aria-modal="true" aria-label="Immagine ingrandita">
+    <button id="lightbox-close" aria-label="Chiudi immagine">✕</button>
+    <img id="lightbox-img" src="" alt="Immagine prodotto ingrandita" />
+  </div>
   <!-- ============================================================
        MODAL — each product has its own hardcoded panel.
        No async image loading. Images are directly in HTML.
@@ -1543,6 +1608,57 @@
         }
       },
     };
+
+
+    /* ── Lightbox ─────────────────────────────────────────────────
+       Opens when user clicks a .modal__img image.
+       Completely independent of the Modal object above.
+       ──────────────────────────────────────────────────────────── */
+    const Lightbox = {
+      el:    document.getElementById('lightbox'),
+      img:   document.getElementById('lightbox-img'),
+      close: document.getElementById('lightbox-close'),
+
+      open(src, alt) {
+        this.img.src = src;
+        this.img.alt = alt || 'Immagine prodotto';
+        this.el.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      },
+
+      hide() {
+        this.el.classList.remove('active');
+        document.body.style.overflow = '';
+        // Clear src after transition so no flash on next open
+        setTimeout(() => { this.img.src = ''; }, 300);
+      },
+
+      init() {
+        // Close button
+        this.close.addEventListener('click', () => this.hide());
+
+        // Click backdrop to close
+        this.el.addEventListener('click', (e) => {
+          if (e.target === this.el) this.hide();
+        });
+
+        // ESC to close
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && this.el.classList.contains('active')) {
+            this.hide();
+          }
+        });
+
+        // Delegate click on any .modal__img — works for all panels
+        document.addEventListener('click', (e) => {
+          if (e.target.classList.contains('modal__img')) {
+            this.open(e.target.src, e.target.alt);
+          }
+        });
+      },
+    };
+
+    Lightbox.init();
 
     Form.init();
 
