@@ -57,9 +57,6 @@
   <meta name="twitter:description" content="Installazione professionale di finestre per tetti e lucernari VELUX in Lombardia." />
   <meta name="twitter:image"       content="https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=1200&fm=webp&q=65&fit=crop&auto=format" />
   <!-- Preconnect to font origins so DNS+TCP is ready before CSS requests -->
-  <!-- Supabase JS client -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
-
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
@@ -1440,10 +1437,10 @@
     // ── Formspree — sends email notification to your friend
     const FORMSPREE_ID = 'xqeydvgl';
 
-    // ── Supabase — saves every submission to the database
-    const SUPABASE_URL = 'https://vtqclhbrizdhjcwbpdhw.supabase.co';
-    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ0cWNsaGJyaXpkaGpjd2JwZGh3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2MTE0ODMsImV4cCI6MjA4OTE4NzQ4M30.m4GgV0lPrF85zxjrAG4XbM2sObrpcv9LYD7Z02Jzo40';
-    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    // ── SheetDB — saves every submission to Google Sheets
+    // Your friend can view all inquiries at:
+    // https://docs.google.com/spreadsheets/d/1hxQzMcrpGcbm5gxyWTMTiEP0tCTJULrB4j7a9c92ADA
+    const SHEETDB_URL = 'https://sheetdb.io/api/v1/by99ida1xhayw';
 
     const Form = {
       el:         document.getElementById('contactForm'),
@@ -1521,24 +1518,24 @@
           });
           if (res.ok) {
             // Also save to Supabase database if credentials are set
-            if (SUPABASE_URL !== 'YOUR_SUPABASE_URL') {
-              const data = {
-                nome:      document.getElementById('nome').value,
-                cognome:   document.getElementById('cognome').value,
-                email:     document.getElementById('email').value,
-                telefono:  document.getElementById('telefono').value,
-                servizio:  document.getElementById('servizio').value,
-                messaggio: document.getElementById('messaggio').value,
-              };
-              // Save to Supabase using official JS client
-              supabaseClient
-                .from('submissions')
-                .insert([data])
-                .then(({ error }) => {
-                  if (error) console.error('Supabase error:', error.message);
-                  else console.log('Supabase: row saved successfully');
-                });
-            }
+            // Save to Google Sheets via SheetDB
+            fetch(SHEETDB_URL, {
+              method:  'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                data: {
+                  nome:      document.getElementById('nome').value,
+                  cognome:   document.getElementById('cognome').value,
+                  email:     document.getElementById('email').value,
+                  telefono:  document.getElementById('telefono').value,
+                  servizio:  document.getElementById('servizio').value,
+                  messaggio: document.getElementById('messaggio').value,
+                }
+              }),
+            })
+            .then(r => r.json())
+            .then(j => console.log('SheetDB saved:', j))
+            .catch(err => console.error('SheetDB error:', err));
             this.el.querySelectorAll('input, textarea, select').forEach(f => f.value = '');
             this.successMsg.style.display = 'block';
             setTimeout(() => { this.successMsg.style.display = 'none'; }, 6000);
