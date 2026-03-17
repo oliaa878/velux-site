@@ -832,6 +832,20 @@
 
     /* ── Active nav link ─────────────────────────────────────── */
     nav ul a.nav__active { color: var(--red); }
+
+    /* ── Hero desktop centering fix ─────────────────────────────
+       Only applies on desktop (>1024px). Mobile is untouched.   */
+    @media (min-width: 1025px) {
+      #hero {
+        min-height: 100vh;
+        align-items: center;
+      }
+      .hero__left {
+        padding-top: 3rem;
+        padding-bottom: 3rem;
+        justify-content: center;
+      }
+    }
   </style>
 </head>
 
@@ -1788,4 +1802,4 @@
   </script>
 
 </body>
-</html>
+            </html>
